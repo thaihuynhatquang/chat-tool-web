@@ -1,0 +1,27 @@
+.round-circle {
+  border-radius: 1rem!important;
+}
+
+.bg-dark a {
+  color: white!important;
+}
+
+.text-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.cursor-disabled {
+  cursor: not-allowed;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.focus-highlight-disabled {
+  outline: 0;
+}
+
+.mw-75 {
+  max-width: 75%;
+}

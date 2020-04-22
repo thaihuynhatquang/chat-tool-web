@@ -1,0 +1,26 @@
+/*
+ * Bootstrap sample color:
+ * primary: #007bff
+ * secondary: #6c757
+ */
+
+.item-selected {
+  border-right: 3px solid #007bff!important;
+}
+
+.search-input {
+  position: relative;
+}
+
+.search-input>input {
+  border-radius: 2rem;
+  text-indent: 2rem;
+}
+
+.search-input>i.fa-search {
+  position: absolute;
+  top: 0.45rem;
+  left: 0.65rem;
+  font-size: 1rem;
+  color: #6c757d!important;
+}

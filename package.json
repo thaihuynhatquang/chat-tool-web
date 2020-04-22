@@ -1,51 +1,39 @@
 {
-  "name": "chat-tool-web",
-  "version": "1.0.0",
+  "name": "chat-tool-v2-web",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.1.1",
-    "@testing-library/react": "^10.0.1",
-    "@testing-library/user-event": "^10.0.0",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^8.0.6",
-    "bootstrap": "^4.4.1",
-    "prettier": "^1.19.1",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0",
-    "reactstrap": "^8.4.1"
+    "@fortawesome/fontawesome-free": "^5.4.2",
+    "bootstrap": "^4.1.3",
+    "classnames": "^2.2.6",
+    "emoji-mart": "^2.8.1",
+    "moment": "^2.22.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-scripts": "2.0.5",
+    "reactstrap": "^6.5.0",
+    "recompose": "^0.30.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint .",
+    "storybook": "export NODE_PATH=src/ && start-storybook -p 9001 -c src/storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "devDependencies": {
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-config-prettier-standard": "^3.0.1",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^23.8.2",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^3.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "@storybook/react": "5.3.18",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5"
   }
 }
