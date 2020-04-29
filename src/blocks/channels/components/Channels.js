@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Channel from './Channel';
 
-class Channels extends Component {
-  render() {
-    const { channels, selectedChannel } = this.props;
-    return (
-      <div className='d-inline-block'>
-        {channels.map((channel) => (
-          <Channel key={channel.id} channel={channel} isSelected={channel.id === selectedChannel} />
-        ))}
-      </div>
-    );
-  }
-}
+const Channels = (props) => {
+  const { channels, selectedChannelId, onSelectChannel } = props;
+  return (
+    <div className='d-inline-block border-right text-center h-100'>
+      {channels.map((channel) => (
+        <Channel
+          key={channel.id}
+          channel={channel}
+          isSelected={channel.id === selectedChannelId}
+          onSelectChannel={onSelectChannel}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default Channels;

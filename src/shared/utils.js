@@ -6,3 +6,8 @@ export const visualTime = (time) => {
   const formatDateString = isSameDay ? 'LT' : isSameYear ? 'DD/MM HH:mm' : 'DD/MM/YY';
   return moment(time).format(formatDateString);
 };
+
+export const upperFirst = (string) => {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};

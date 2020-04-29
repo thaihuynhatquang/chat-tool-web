@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 
-import ChannelsLayout from 'blocks/channels/components/ChannelsLayout';
+import Channels from 'blocks/channels/';
 import ThreadsLayout from 'blocks/threads/components/ThreadsLayout';
 import MessagesLayout from 'blocks/messages/components/MessagesLayout';
 import InformationsLayout from 'blocks/informations/components/InformationsLayout';
 
 // TODO: Using sample data to render app. Need to change to other application state.
-import { channels, thread, threads, messages, user, users, customer, customers, tags } from 'storybook/sampleData';
+import { thread, threads, messages, user, users, customer, customers, tags } from 'storybook/sampleData';
 
 const selectedThread = 3;
-const selectedChannel = 2;
 
 class App extends Component {
   render() {
     return (
       <div className='position-absolute d-flex' style={{ left: 0, right: 0, top: 0, bottom: 0 }}>
         <div className='flex-grow-0 flex-shrink-0' style={{ width: 70 }}>
-          <ChannelsLayout channels={channels} selectedChannel={selectedChannel} />
+          <Channels />
         </div>
         <div className='flex-grow-0 flex-shrink-0' style={{ width: '22%' }}>
           <ThreadsLayout
