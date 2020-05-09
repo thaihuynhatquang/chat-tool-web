@@ -16,6 +16,8 @@
     "react-scripts": "2.0.5",
     "reactstrap": "^6.5.0",
     "recompose": "^0.30.0",
+    "reduce-reducers": "^0.4.3",
+    "socket.io-client": "^2.2.0",
     "redux": "^4.0.5"
   },
   "scripts": {

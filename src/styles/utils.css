@@ -1,13 +1,5 @@
-.round-circle {
-  border-radius: 1rem!important;
-}
-
 .bg-dark a {
   color: white!important;
-}
-
-.text-pre-wrap {
-  white-space: pre-wrap;
 }
 
 .cursor-disabled {
@@ -22,6 +14,22 @@
   outline: 0;
 }
 
-.mw-75 {
-  max-width: 75%;
+.mw-55 {
+  max-width: 55%;
+}
+
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.round-circle {
+  border-radius: 1rem!important;
+}
+
+.text-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.text-primary-hover:hover {
+  color: #007bff!important;
 }

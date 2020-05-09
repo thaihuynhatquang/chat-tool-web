@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { UncontrolledTooltip } from 'reactstrap';
 import classNames from 'classnames';

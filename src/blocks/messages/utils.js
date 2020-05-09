@@ -17,7 +17,7 @@ export const formatMessage = (string) => {
           </a>
         );
       }
-      const emoji = emojiIndex.search(word).find((e) => e.emoticons.includes(word));
+      const emoji = (emojiIndex.search(word) || []).find((e) => e.emoticons.includes(word));
       if (emoji) return emoji.native;
 
       return word;

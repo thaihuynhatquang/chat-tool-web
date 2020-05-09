@@ -9,6 +9,7 @@ export const channel = {
       'https://scontent.fhan7-1.fna.fbcdn.net/v/t31.0-8/p960x960/14708071_1698871510432437_7066549912353019610_o.jpg?_nc_cat=108&_nc_sid=09cbfe&_nc_ohc=cYjL4cfY2vMAX8mHxgr&_nc_ht=scontent.fhan7-1.fna&_nc_tp=6&oh=4d6b3c96e95df8cdd608e1501ca85f76&oe=5EC72696',
     facebookUrl: 'https://www.facebook.com/sgcfs',
   },
+  missCount: 12,
 };
 
 export const channels = [
@@ -89,7 +90,7 @@ export const thread = {
   uniqueKey: '719821268410677',
   title: 'Thái Huy Nhật Quang',
   status: 'unread',
-  lastMsg: {
+  lastMessage: {
     mid: '4Qk-l3X8TG2wM_-AkAw',
     content: 'Xin chào thế giới',
     isVerified: true,

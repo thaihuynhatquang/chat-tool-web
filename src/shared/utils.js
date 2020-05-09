@@ -11,3 +11,9 @@ export const upperFirst = (string) => {
   if (!string) return '';
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+export const unionArray = (arrArg) => {
+  return arrArg.filter((elem, pos, arr) => {
+    return arr.indexOf(elem) === pos;
+  });
+};

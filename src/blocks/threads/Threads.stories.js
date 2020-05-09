@@ -3,9 +3,6 @@ import { storiesOf } from '@storybook/react';
 
 import Thread from './components/Thread';
 import Threads from './components/Threads';
-import ThreadSearch from './components/ThreadSearch';
-import ThreadHeader from './components/ThreadHeader';
-import ThreadsLayout from './components/ThreadsLayout';
 
 import { thread, threads } from 'storybook/sampleData';
 
@@ -13,12 +10,13 @@ const ThreadWrapper = (story) => <div style={{ width: '28%', height: 600 }}>{sto
 
 storiesOf('Thread', module)
   .addDecorator(ThreadWrapper)
-  .add('simple', () => <Thread thread={thread} isSelected />)
+  .add('simple', () => <Thread onSelectThread={(e) => e} thread={thread} isSelected />)
   .add('with last message is attachment', () => (
     <Thread
+      onSelectThread={(e) => e}
       thread={{
         ...thread,
-        lastMsg: {
+        lastMessage: {
           ...thread.lastMsg,
           isVerified: false,
           content: null,
@@ -38,14 +36,15 @@ storiesOf('Thread', module)
     />
   ))
   .add('with miss count and time', () => (
-    <Thread thread={{ ...thread, missCount: 3, missTime: '2018-11-01 09:00:00' }} />
+    <Thread onSelectThread={(e) => e} thread={{ ...thread, missCount: 3, missTime: '2018-11-01 09:00:00' }} />
   ))
   .add('very long content text', () => (
     <Thread
+      onSelectThread={(e) => e}
       thread={{
         ...thread,
         title: 'This is very long name this is very long name',
-        lastMsg: {
+        lastMessage: {
           ...thread.lastMsg,
           content:
             'This is very long text This is very long text This is very long text This is very long text This is very long text This is very long text This is very long text This is very long text This is very long text ',
@@ -57,21 +56,4 @@ storiesOf('Thread', module)
 
 storiesOf('Threads', module)
   .addDecorator(ThreadWrapper)
-  .add('simple', () => <Threads threads={threads} selectedThread={2} />);
-
-storiesOf('ThreadSearch', module)
-  .addDecorator(ThreadWrapper)
-  .add('simple', () => <ThreadSearch />);
-
-storiesOf('ThreadHeader', module)
-  .addDecorator(ThreadWrapper)
-  .add('simple', () => <ThreadHeader status='processing' count={30} />);
-
-storiesOf('ThreadLayout', module)
-  .addDecorator(ThreadWrapper)
-  .add('simple', () => (
-    <ThreadsLayout threads={threads} currentFilterStatus='processing' countThreads={30} selectedThread={2} />
-  ))
-  .add('with scroll', () => (
-    <ThreadsLayout threads={threads} currentFilterStatus='processing' countThreads={30} selectedThread={2} />
-  ));
+  .add('simple', () => <Threads onSelectThread={(e) => e} threads={threads} selectedThread={2} />);

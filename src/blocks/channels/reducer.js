@@ -7,6 +7,21 @@ const initState = {
   selectedChannelId: null,
 };
 
+export const threadsInChannels = (state, action) => {
+  switch (action.type) {
+    case SELECT_CHANNEL:
+      return {
+        ...state,
+        filterBy: {
+          ...state.filterBy,
+          channelId: action.id,
+        },
+      };
+    default:
+      return state;
+  }
+};
+
 export default (state = initState, action) => {
   switch (action.type) {
     case FETCH_CHANNELS_SUCCEED:

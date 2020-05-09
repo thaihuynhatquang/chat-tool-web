@@ -1,11 +1,11 @@
-import App from 'App';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import * as serviceWorker from 'serviceWorker';
-import configureStore from 'configs/store';
 import 'configs/axios';
+import configureStore from 'configs/store';
 import 'styles';
+import App from 'App';
+import * as serviceWorker from 'serviceWorker';
 
 const rootElement = document.getElementById('root');
 
