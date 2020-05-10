@@ -1,4 +1,5 @@
 import { THREAD_STATUS_PROCESSING } from 'common/constants';
+import { replaceVietnameseChar } from 'shared/utils';
 
 export const initState = {
   items: [],
@@ -21,7 +22,11 @@ export const threadsPostReducer = (state = initState) => {
     const thread = itemsById[id];
     if (thread.channelId !== channelId) return false;
     if (thread.status !== status) return false;
-    if (title && !thread.title.toLowerCase().includes(title.toLowerCase())) return false;
+    if (
+      title &&
+      !replaceVietnameseChar(thread.title.toLowerCase()).includes(replaceVietnameseChar(title.toLowerCase()))
+    )
+      return false;
     return true;
   });
   const filterItemsById = filterItems.reduce((acc, val) => ({ ...acc, [val]: itemsById[val] }), {});
