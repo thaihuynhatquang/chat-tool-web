@@ -19,7 +19,7 @@ const Thread = (props) => {
       className={classNames('py-2 border-bottom cursor-pointer', {
         'item-selected': isSelected,
       })}
-      onClick={onSelectThread(id)}
+      onClick={!isSelected ? onSelectThread(id) : undefined}
       noGutters>
       <Col xs={2} className='px-2' style={{ maxWidth: 60 }}>
         <img

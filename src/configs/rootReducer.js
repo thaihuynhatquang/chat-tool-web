@@ -1,10 +1,13 @@
 import { combineReducers } from 'redux';
 import reduceReducers from 'reduce-reducers';
 import channels, { threadsInChannels } from 'blocks/channels/reducer';
-import threads from 'blocks/threads/reducer';
+import threads, { customerInThreads } from 'blocks/threads/reducer';
 import { threadsInThreadSearch } from 'blocks/threadsSearch/reducer';
 import { threadsPostReducer } from './initState/threads';
 import messages from 'blocks/messages/reducer';
+import customer from 'blocks/customersInfo/customer/reducer';
+import { customerInTags } from 'blocks/customersInfo/tags/reducer';
+import { customerInNotes } from 'blocks/customersInfo/notes/reducer';
 import { pendingMessagesInSendBox } from 'blocks/messagesSendBox/reducer';
 import { channelsInSocket, threadsInSocket, messagesInSocket, pendingMessagesInSocket } from 'socket/reducers';
 
@@ -22,5 +25,6 @@ export default combineReducers({
     initStoreState.threads,
   ),
   messages: reduceReducers(messages, messagesInSocket, initStoreState.messages),
+  customer: reduceReducers(customer, customerInThreads, customerInTags, customerInNotes, initStoreState.customer),
   pendingMessages: reduceReducers(pendingMessagesInSendBox, pendingMessagesInSocket, initStoreState.pendingMessages),
 });

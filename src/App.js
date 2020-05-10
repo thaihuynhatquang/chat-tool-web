@@ -8,6 +8,7 @@ import MessagesHeader from 'blocks/messagesHeader';
 import Messages from 'blocks/messages';
 import MessagesSendBox from 'blocks/messagesSendBox';
 import ThreadInfo from 'blocks/threadsInfo';
+import CustomerInfo from 'blocks/customersInfo';
 
 class App extends Component {
   render() {
@@ -37,6 +38,7 @@ class App extends Component {
         <div className='flex-grow-0 flex-shrink-0' style={{ width: '22%' }}>
           <div className='border-left h-100' style={{ overflowY: 'auto' }}>
             <ThreadInfo />
+            <CustomerInfo />
           </div>
         </div>
       </div>

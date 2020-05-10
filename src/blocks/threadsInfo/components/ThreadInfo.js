@@ -23,11 +23,11 @@ const ThreadInfo = (props) => {
   return (
     <div className='p-2'>
       <div className='pt-1'>
-        <span className='pr-2'>Đang chat:</span>
+        <span className='pr-2'>Đang tham gia:</span>
         <div className='d-inline'>{getStaffView(activeStaffs, 'bg-primary', 'Chưa có')}</div>
       </div>
       <div>
-        <span className='pr-2'>Đã chat:</span>
+        <span className='pr-2'>Đã tham gia:</span>
         <div className='d-inline'>{getStaffView(historyStaffs, 'bg-secondary', 'Chưa có')}</div>
       </div>
       {thread.additionData.description && (

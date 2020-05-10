@@ -46,15 +46,6 @@ const withFetcher = (name, fetchAPI, { fetchOnMount = false, fetchOnPropsChange 
         fetchAPI(props).then(props[`receive${Name}Data`], props[`receive${Name}Error`]);
       },
     }),
-    mapProps((props) => {
-      const {
-        [`start${Name}Fetch`]: startFetch,
-        [`receive${Name}Data`]: receiveData,
-        [`receive${Name}Error`]: receiveError,
-        ...rest
-      } = props;
-      return rest;
-    }),
     fetchOnMount
       ? lifecycle({
           componentDidMount() {
@@ -74,6 +65,16 @@ const withFetcher = (name, fetchAPI, { fetchOnMount = false, fetchOnPropsChange 
           },
         })
       : (Component) => Component,
+    mapProps((props) => {
+      const {
+        [`fetch${Name}`]: fetch,
+        [`start${Name}Fetch`]: startFetch,
+        [`receive${Name}Data`]: receiveData,
+        [`receive${Name}Error`]: receiveError,
+        ...rest
+      } = props;
+      return rest;
+    }),
   );
 };
 

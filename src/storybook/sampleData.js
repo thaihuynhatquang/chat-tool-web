@@ -35,17 +35,17 @@ export const channels = [
 ];
 
 export const tags = [
-  { name: 'buildpc', color: '#2d5757' },
-  { name: 'hoitham', color: '#c58df4' },
-  { name: 'banphim', color: '#ffa500' },
-  { name: 'man hinh', color: '#f9530b' },
-  { name: 'card', color: '#f9530b' },
-  { name: 'chuot', color: '#f9530b' },
-  { name: 'loa', color: '#f9530b' },
-  { name: 'tai nghe', color: '#f9530b' },
-  { name: 'lot chuot', color: '#f9530b' },
-  { name: 'khuyen mai', color: '#f9530b' },
-  { name: 'giam gia', color: '#f9530b' },
+  { id: 1, content: 'Build PC', color: '#f50' },
+  { id: 2, content: 'Khiếu nại', color: '#2db7f5' },
+  { id: 3, content: 'Bàn phím', color: '#87d068' },
+  { id: 4, content: 'Màn hình', color: '#108ee9' },
+  { id: 5, content: 'Card', color: '#f9530b' },
+  { id: 6, content: 'Chuột', color: '#f9530b' },
+  { id: 7, content: 'Loa', color: '#f9530b' },
+  { id: 8, content: 'Tai nghe', color: '#f9530b' },
+  { id: 9, content: 'Lót chuột', color: '#f9530b' },
+  { id: 10, content: 'Khuyến mãi', color: '#f9530b' },
+  { id: 11, content: 'Giảm giá', color: '#f9530b' },
 ];
 
 export const customer = {

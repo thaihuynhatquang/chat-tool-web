@@ -26,6 +26,10 @@
   border-radius: 1rem!important;
 }
 
+.round-input {
+  border-radius: 2rem!important;
+}
+
 .text-pre-wrap {
   white-space: pre-wrap;
 }

@@ -9,7 +9,6 @@ export const formatThreadLastMessage = (message) => {
   const isAttachmentMessage = additionData && additionData.attachments;
   const contentFormat = isAttachmentMessage ? (
     <Fragment>
-      {' '}
       Đã gửi một tập tin <i className='fas fa-paperclip' />{' '}
     </Fragment>
   ) : (
@@ -19,7 +18,7 @@ export const formatThreadLastMessage = (message) => {
   return (
     <span>
       {userName || customerName}
-      {isVerified && <Verified />}: {contentFormat}
+      {!!isVerified && <Verified />}: {contentFormat}
     </span>
   );
 };

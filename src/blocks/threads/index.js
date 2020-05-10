@@ -1,4 +1,4 @@
-import { compose, withProps, withHandlers } from 'recompose';
+import { compose, withProps, withHandlers, withState } from 'recompose';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withFetcher, withLoading, withInfiniteScroll } from 'shared/hooks';
@@ -47,12 +47,12 @@ const withFetcherAPI = withFetcher(
     const input = {
       channelId: props.selectedChannelId,
       limit: props.limit,
-      offset: 0,
       title: props.filterBy.title,
       status: props.filterBy.status,
     };
     const res = await fetchThreadsByChannelId(input);
     props.fetchThreadsSucceed(res);
+    props.setNextCursor(res.data.nextCursor);
     return res;
   },
   {
@@ -76,6 +76,7 @@ const enhance = compose(
   withProps((props) => ({
     limit: PAGING_LIMIT_THREADS,
   })),
+  withState('nextCursor', 'setNextCursor', ''),
   connect(mapState, mapDispatch),
   withFetcherAPI,
   withLoadingAPI,
@@ -87,19 +88,19 @@ const enhance = compose(
       const wrappedElement = document.getElementById(CONTAINER_ID);
       return isBottom(wrappedElement);
     },
-    (props) => {
-      return props.threads.length !== props.totalCount;
-    },
-    (props) => {
+    (props) => !!props.nextCursor && props.threads.length !== props.totalCount,
+    async (props) => {
       const input = {
         channelId: props.selectedChannelId,
         limit: props.limit,
-        offset: props.threads.length,
         title: props.filterBy.title,
         status: props.filterBy.status,
+        nextCursor: props.nextCursor,
       };
 
-      return fetchThreadsByChannelId(input);
+      const res = await fetchThreadsByChannelId(input);
+      props.setNextCursor(res.data.nextCursor);
+      return res;
     },
     (props) => (res) => {
       props.fetchMoreThreadsSucceed(res);

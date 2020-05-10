@@ -28,3 +28,16 @@ export default (state = initState, action) => {
       return state;
   }
 };
+
+export const customerInThreads = (state = initStoreState.customer, action) => {
+  switch (action.type) {
+    case SELECT_THREAD:
+      return {
+        ...state,
+        item: null,
+        totalCount: 0,
+      };
+    default:
+      return state;
+  }
+};
