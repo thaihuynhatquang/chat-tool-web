@@ -9,12 +9,13 @@ import customer from 'blocks/customersInfo/customer/reducer';
 import { customerInTags } from 'blocks/customersInfo/tags/reducer';
 import { customerInNotes } from 'blocks/customersInfo/notes/reducer';
 import { pendingMessagesInSendBox } from 'blocks/messagesSendBox/reducer';
+import { userInApp } from 'blocks/app/reducer';
 import { channelsInSocket, threadsInSocket, messagesInSocket, pendingMessagesInSocket } from 'socket/reducers';
 
 import { initStoreState } from 'configs/initState';
 
 export default combineReducers({
-  user: () => initStoreState.user,
+  user: userInApp,
   channels: reduceReducers(channels, channelsInSocket, initStoreState.channels),
   threads: reduceReducers(
     threads,

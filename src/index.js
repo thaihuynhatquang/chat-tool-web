@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import 'configs/axios';
 import configureStore from 'configs/store';
 import 'styles';
-import App from 'App';
+import App from 'blocks/app';
 import * as serviceWorker from 'serviceWorker';
 
 const rootElement = document.getElementById('root');
