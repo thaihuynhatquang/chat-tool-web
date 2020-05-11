@@ -9,4 +9,6 @@ const CustomersInfoWrapper = (story) => <div style={{ width: '30%' }}>{story()}<
 
 storiesOf('Customer', module)
   .addDecorator(CustomersInfoWrapper)
-  .add('simple', () => <Customer customer={customer} totalCount={100} threadId={1} />);
+  .add('simple', () => (
+    <Customer customer={customer} totalCount={100} threadId={1} searchCustomers={() => {}} selectCustomer={() => {}} />
+  ));

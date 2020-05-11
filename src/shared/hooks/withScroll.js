@@ -1,6 +1,6 @@
 import { lifecycle, mapProps, withHandlers, withStateHandlers, compose } from 'recompose';
 
-const emptyFunction = null;
+const emptyFunction = () => {};
 const defaultLoader = {
   offset: 0,
   shouldShow: false,

@@ -8,4 +8,6 @@ const MessageWrapper = (story) => <div style={{ width: '60%' }}>{story()}</div>;
 
 storiesOf('MessagesHeader', module)
   .addDecorator(MessageWrapper)
-  .add('simple', () => <Header thread={thread} onClickSpam={() => {}} onClickDone={() => {}} />);
+  .add('simple', () => (
+    <Header thread={thread} onClickSpam={() => {}} onClickDone={() => {}} onClickReopen={() => {}} />
+  ));

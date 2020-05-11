@@ -1,4 +1,3 @@
-// @flow
 import { compose, withHandlers, withStateHandlers, mapProps, lifecycle } from 'recompose';
 import { upperFirst } from 'shared/utils';
 
@@ -29,7 +28,6 @@ const withFetcher = (name, fetchAPI, { fetchOnMount = false, fetchOnPropsChange 
         }),
         [`receive${Name}Error`]: ({ [`${name}Fetcher`]: { data } }) => (error) => {
           // TODO: Using Notification to show the error
-          console.error(error);
           return {
             [`${name}Fetcher`]: {
               data,

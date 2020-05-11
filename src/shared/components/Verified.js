@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Verified extends Component {
-  render() {
-    return (
-      <span className='d-inline-block pl-1 text-primary'>
-        <i className='fas fa-check-circle' />
-      </span>
-    );
-  }
-}
+const Verified = () => (
+  <span className='d-inline-block pl-1 text-primary'>
+    <i className='fas fa-check-circle' />
+  </span>
+);
 
 export default Verified;

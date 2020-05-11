@@ -5,13 +5,14 @@ const avatarSize = 40;
 
 const Header = (props) => {
   const { thread, onClickDone, onClickReopen, onClickSpam } = props;
-  const { status } = thread;
+  const { status, additionData } = thread;
+  const avatarUrl = (additionData && additionData.avatarUrl) || '/images/default.png';
   return (
     <div className='d-flex justify-content-between align-items-center border-bottom' style={{ height: 60 }}>
       <div className='d-flex align-items-center p-2'>
         <img
           className='rounded-circle object-fit-cover'
-          src={thread.additionData.avatarUrl}
+          src={avatarUrl}
           alt={thread.title}
           width={avatarSize}
           height={avatarSize}

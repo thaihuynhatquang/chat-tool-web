@@ -10,7 +10,8 @@ const Message = (props) => {
   const { message, isShowName, isShowAvatar } = props;
   const { mid, content, customer, user, isVerified, additionData, sendingStatus, errorMessage, msgCreatedAt } = message;
   const ownerName = (isVerified && user && user.name) || (customer && customer.name);
-  const ownerAvatar = (isVerified && user && user.avatarUrl) || (customer && customer.additionData.avatarUrl);
+  const ownerAvatar =
+    (isVerified && user && user.avatarUrl) || (customer && customer.additionData && customer.additionData.avatarUrl);
   const attachments = additionData && additionData.attachments;
   const tooltipId = `message_${mid}`;
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import Messages from './components/Messages';
-import { branch, lifecycle, mapProps, renderNothing, withHandlers, withProps, compose } from 'recompose';
+import { branch, lifecycle, mapProps, renderNothing, withHandlers, withProps, withState, compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -41,7 +41,7 @@ const mapState = (state) => {
   return {
     messages: mergeMessages,
     threadId: thread && thread.id,
-    readAt: thread && lastMessage && lastMessage.msgCreatedAt >= thread.readAt && thread.readAt,
+    readAt: thread && lastMessage && lastMessage.msgCreatedAt <= thread.readAt && thread.readAt,
   };
 };
 
@@ -49,12 +49,16 @@ const mapDispatch = (dispatch) => bindActionCreators(actions, dispatch);
 
 const enhance = compose(
   connect(mapState, mapDispatch),
+  withState('nextCursor', 'setNextCursor', ''),
   branch((props) => !props.threadId, renderNothing),
   withFetcher(
     'messages',
     async (props) => {
-      const { fetchMessagesSucceed, threadId } = props;
-      fetchMessagesSucceed(await services.fetchMessages({ threadId }));
+      const { fetchMessagesSucceed, threadId, setNextCursor } = props;
+      const res = await services.fetchMessages({ threadId });
+      setNextCursor(res.data.nextCursor);
+
+      fetchMessagesSucceed(res);
     },
     {
       fetchOnMount: true,
@@ -66,10 +70,11 @@ const enhance = compose(
     scrollToBottom: (props) => () => {
       const { mountRef } = props;
       const node = mountRef && mountRef.current;
-      if (node)
+      if (node) {
         setTimeout(() => {
           node.scrollTop = node.scrollHeight;
         }, 1);
+      }
     },
   }),
   lifecycle({
@@ -92,8 +97,16 @@ const enhance = compose(
   withScroll({
     refPropName: 'mountRef',
     onScrollTop: async (props) => {
-      const { fetchMoreMessagesSucceed, threadId, messages } = props;
-      fetchMoreMessagesSucceed(await services.fetchMessages({ threadId, offset: messages.length }));
+      const { fetchMoreMessagesSucceed, threadId, nextCursor, setNextCursor } = props;
+      if (!nextCursor) {
+        return;
+      }
+      const res = await services.fetchMessages({
+        threadId,
+        nextCursor: props.nextCursor,
+      });
+      setNextCursor(res.data.nextCursor);
+      fetchMoreMessagesSucceed(res);
     },
   }),
   mapProps(

@@ -30,7 +30,7 @@ const ThreadInfo = (props) => {
         <span className='pr-2'>Đã tham gia:</span>
         <div className='d-inline'>{getStaffView(historyStaffs, 'bg-secondary', 'Chưa có')}</div>
       </div>
-      {thread.additionData.description && (
+      {thread.additionData && thread.additionData.description && (
         <div className='pt-1'>
           <button className='btn btn-link text-primary p-0' onClick={(e) => setOpen(!open)}>
             <small>Mở rộng</small>
