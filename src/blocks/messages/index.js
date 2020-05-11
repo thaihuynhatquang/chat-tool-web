@@ -36,9 +36,12 @@ const mapState = (state) => {
       };
     });
   const messages = items.map((key) => itemsById[key]);
+  const mergeMessages = [...[...pendingMessages].reverse(), ...messages];
+  const lastMessage = mergeMessages.length > 0 ? mergeMessages[0] : null;
   return {
-    messages: [...[...pendingMessages].reverse(), ...messages],
+    messages: mergeMessages,
     threadId: thread && thread.id,
+    readAt: thread && lastMessage && lastMessage.msgCreatedAt >= thread.readAt && thread.readAt,
   };
 };
 
@@ -74,10 +77,11 @@ const enhance = compose(
       this.props.scrollToBottom();
     },
     componentDidUpdate(prevProps) {
-      const { threadId, messages, scrollToBottom } = this.props;
+      const { threadId, messages, readAt, scrollToBottom } = this.props;
 
       if (
         prevProps.threadId !== threadId ||
+        prevProps.readAt !== readAt ||
         (prevProps.messages.length < messages.length && prevProps.messages.length === 0) ||
         (prevProps.messages.length > 0 && messages.length > 0 && prevProps.messages[0].mid !== messages[0].mid) // TODO: only scroll down if the scroll is bottom
       ) {

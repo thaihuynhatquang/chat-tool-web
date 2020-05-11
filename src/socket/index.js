@@ -1,6 +1,7 @@
 import {
   SOCKET_NEW_MESSAGE as NEW_MESSAGE_EVENT,
   SOCKET_UPDATE_THREAD_STATUS as UPDATE_THREAD_STATUS_EVENT,
+  SOCKET_UPDATE_THREAD_READ as UPDATE_THREAD_READ_EVENT,
 } from 'common/constants';
 import { SOCKET_NEW_MESSAGE, SOCKET_UPDATE_THREAD, SOCKET_UPDATE_CHANNEL } from './actions';
 import { normalize } from 'normalizr';
@@ -25,6 +26,14 @@ const socketHandler = (socket) => ({ dispatch }) => {
   });
 
   socket.on(UPDATE_THREAD_STATUS_EVENT, ({ thread }) => {
+    dispatch({
+      type: SOCKET_UPDATE_THREAD,
+      data: thread,
+      norm: normalize(thread, threadModel),
+    });
+  });
+
+  socket.on(UPDATE_THREAD_READ_EVENT, ({ thread }) => {
     dispatch({
       type: SOCKET_UPDATE_THREAD,
       data: thread,
