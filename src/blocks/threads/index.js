@@ -48,7 +48,7 @@ const withFetcherAPI = withFetcher(
       channelId: props.selectedChannelId,
       limit: props.limit,
       title: props.filterBy.title,
-      status: props.filterBy.status,
+      // status: props.filterBy.status,
     };
     const res = await fetchThreadsByChannelId(input);
     props.fetchThreadsSucceed(res);
@@ -94,7 +94,7 @@ const enhance = compose(
         channelId: props.selectedChannelId,
         limit: props.limit,
         title: props.filterBy.title,
-        status: props.filterBy.status,
+        // status: props.filterBy.status,
         nextCursor: props.nextCursor,
       };
 

@@ -60,10 +60,7 @@ const enhance = compose(
         const { data: userInfo } = await services.me();
         props.fetchCurrentUserSucceed(userInfo);
       } catch (err) {
-        if (err.response && err.response.status === 401) {
-          const iamUrl = process.env.REACT_APP_IAM_SERVER_URL;
-          if (iamUrl) window.location = `${iamUrl}/web/login?redirect_url=${window.location.href}`;
-        }
+        console.log(err);
       }
     },
     { fetchOnMount: true },
@@ -73,3 +70,4 @@ const enhance = compose(
 );
 
 export default enhance(App);
+// export default App;
