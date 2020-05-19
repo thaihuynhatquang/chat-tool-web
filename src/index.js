@@ -12,7 +12,7 @@ import vars from 'vars';
 
 const responseGoogle = (response) => {
   console.log(response);
-  const accessToken = response.tc.id_token;
+  const accessToken = response.tokenId;
   document.cookie = `access_token=${accessToken}`;
 };
 

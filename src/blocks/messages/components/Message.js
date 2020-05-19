@@ -7,8 +7,19 @@ import { formatMessage } from '../utils';
 import { SEND_STATUS_PENDING, SEND_STATUS_ARRIVED, SEND_STATUS_COMPLETED } from '../constants';
 
 const Message = (props) => {
-  const { message, isShowName, isShowAvatar } = props;
-  const { mid, content, customer, user, isVerified, additionData, sendingStatus, errorMessage, msgCreatedAt } = message;
+  const {
+    isShowName,
+    isShowAvatar,
+    sendingStatus,
+    errorMessage,
+    mid,
+    content,
+    customer,
+    user,
+    isVerified,
+    additionData,
+    msgCreatedAt,
+  } = props;
   const ownerName = (isVerified && user && user.name) || (customer && customer.name);
   const ownerAvatar =
     (isVerified && user && user.avatarUrl) || (customer && customer.additionData && customer.additionData.avatarUrl);

@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { withFetcher, withScroll } from 'shared/hooks';
-import { SEND_STATUS_PENDING, SEND_STATUS_ARRIVED } from './constants';
+import { SEND_STATUS_PENDING, SEND_STATUS_ARRIVED, SEND_STATUS_COMPLETED } from './constants';
 import * as actions from './actions';
 import * as services from './services';
 
@@ -16,6 +16,7 @@ const mapState = (state) => {
     threads: { thread },
     user,
   } = state;
+  const readAtValue = thread && thread.readAt;
   const pendingMessages = pendItems
     .filter((key) => thread && pendItemsById[key].threadId === thread.id)
     .map((key) => {
@@ -35,8 +36,16 @@ const mapState = (state) => {
         msgUpdatedAt: createdAt,
       };
     });
-  const messages = items.map((key) => itemsById[key]);
-  const mergeMessages = [...[...pendingMessages].reverse(), ...messages];
+  const messages = items.map((key) => ({
+    ...itemsById[key],
+    sendingStatus: readAtValue ? (itemsById[key].msgCreatedAt > readAtValue ? SEND_STATUS_COMPLETED : null) : null,
+  }));
+  // Create merge messages. NOTE: Array in latest-message-first order.
+  const mergeMessages = [...[...pendingMessages].reverse(), ...messages].map((message, index, array) => ({
+    ...message,
+    isShowName: index === array.length - 1 || !!message.isVerified !== !!array[index + 1].isVerified,
+    isShowAvatar: index === 0 || !!message.isVerified !== !!array[index - 1].isVerified,
+  }));
   const lastMessage = mergeMessages.length > 0 ? mergeMessages[0] : null;
   return {
     messages: mergeMessages,
@@ -117,6 +126,8 @@ const enhance = compose(
       messagesFetcher,
       scrollToBottom,
       threadId,
+      nextCursor,
+      setNextCursor,
       ...rest
     }) => rest,
   ),
