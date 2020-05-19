@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import reduceReducers from 'reduce-reducers';
 import channels, { threadsInChannels } from 'blocks/channels/reducer';
-import threads, { customerInThreads } from 'blocks/threads/reducer';
+import threads, { messagesInThreads, customerInThreads } from 'blocks/threads/reducer';
 import { threadsInThreadSearch } from 'blocks/threadsSearch/reducer';
 import { threadsPostReducer } from './initState/threads';
 import messages from 'blocks/messages/reducer';
@@ -25,7 +25,7 @@ export default combineReducers({
     threadsPostReducer, // NOTE: Always put this in the bottom of reducers
     initStoreState.threads,
   ),
-  messages: reduceReducers(messages, messagesInSocket, initStoreState.messages),
+  messages: reduceReducers(messages, messagesInThreads, messagesInSocket, initStoreState.messages),
   customer: reduceReducers(customer, customerInThreads, customerInTags, customerInNotes, initStoreState.customer),
   pendingMessages: reduceReducers(pendingMessagesInSendBox, pendingMessagesInSocket, initStoreState.pendingMessages),
 });

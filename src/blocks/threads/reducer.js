@@ -1,6 +1,7 @@
 import { FETCH_THREADS_SUCCEED, SELECT_THREAD, FETCH_MORE_THREADS_SUCCEED } from './actions';
 import { unionArray } from 'shared/utils';
 import { initStoreState } from 'configs/initState';
+
 const initState = initStoreState.threads;
 
 export default (state = initState, action) => {
@@ -29,14 +30,22 @@ export default (state = initState, action) => {
   }
 };
 
-export const customerInThreads = (state = initStoreState.customer, action) => {
+export const messagesInThreads = (state = initStoreState.messages, action) => {
   switch (action.type) {
     case SELECT_THREAD:
       return {
         ...state,
-        item: null,
-        totalCount: 0,
+        threadId: action.id,
       };
+    default:
+      return state;
+  }
+};
+
+export const customerInThreads = (state = initStoreState.customer, action) => {
+  switch (action.type) {
+    case SELECT_THREAD:
+      return initStoreState.customer;
     default:
       return state;
   }

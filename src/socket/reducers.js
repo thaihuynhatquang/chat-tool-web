@@ -4,7 +4,11 @@ import { unionArray } from 'shared/utils';
 
 export const messagesInSocket = (state = initStoreState.messages, action) => {
   switch (action.type) {
-    case SOCKET_NEW_MESSAGE:
+    case SOCKET_NEW_MESSAGE: {
+      const {
+        norm: { result, entities },
+      } = action;
+      if (entities.messages && entities.messages[result].threadId !== state.threadId) return state;
       return {
         ...state,
         items: unionArray([action.norm.result, ...state.items]),
@@ -13,6 +17,7 @@ export const messagesInSocket = (state = initStoreState.messages, action) => {
           ...action.norm.entities.messages,
         },
       };
+    }
     default:
       return state;
   }
