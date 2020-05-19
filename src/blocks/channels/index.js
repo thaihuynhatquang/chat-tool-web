@@ -4,15 +4,13 @@ import { connect } from 'react-redux';
 import { withFetcher, withLoading } from 'shared/hooks';
 import { fetchChannelsSucceed, selectChannel } from './actions';
 import { fetchChannels } from './services';
+import * as storeGetter from 'shared/getEntities';
 import Channels from './components/Channels';
 
 const mapState = (state) => {
-  const {
-    channels: { items, itemsById, selectedChannelId },
-  } = state;
-  const channels = items.map((key) => itemsById[key]);
+  const { selectedChannelId } = state;
   return {
-    channels,
+    channels: storeGetter.getChannels(state),
     selectedChannelId,
   };
 };

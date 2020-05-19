@@ -6,14 +6,14 @@ import { MESSAGE_TYPE_TEXT, MESSAGE_TYPE_FILE } from './constants';
 import SendBox from './components/SendBox';
 import * as actions from './actions';
 import * as services from './services';
+import * as storeGetter from 'shared/getEntities';
 import moment from 'moment';
 
 const mapState = (state) => {
-  const {
-    threads: { thread },
-  } = state;
+  const { selectedThreadId } = state;
+  const thread = storeGetter.getSelectedThread(state);
   return {
-    selectedThreadId: thread && thread.id,
+    selectedThreadId,
     selectedThreadStatus: thread && thread.status,
   };
 };

@@ -1,25 +1,41 @@
 import { ADD_TAG_TO_CUSTOMER, REMOVE_TAG_FROM_CUSTOMER } from './actions';
 import { initStoreState } from 'configs/initState';
 
-export const customerInTags = (state = initStoreState.customer, action) => {
+export default (state = initStoreState, action) => {
   switch (action.type) {
     case ADD_TAG_TO_CUSTOMER: {
-      if (!state.item) return state;
+      const { tag, customerId } = action;
+      if (!state.customerId) return state;
+      if (state.customerId !== customerId) return state;
       return {
         ...state,
-        item: {
-          ...state.item,
-          tags: [...state.item.tags, action.tag],
+        entities: {
+          ...state.entities,
+          customers: {
+            ...state.entities.customers,
+            [customerId]: {
+              ...state.entities.customers[customerId],
+              tags: [...state.entities.customers[customerId].tags, tag],
+            },
+          },
         },
       };
     }
     case REMOVE_TAG_FROM_CUSTOMER: {
-      if (!state.item) return state;
+      const { tagId, customerId } = action;
+      if (!state.customerId) return state;
+      if (state.customerId !== customerId) return state;
       return {
         ...state,
-        item: {
-          ...state.item,
-          tags: state.item.tags.filter((tag) => tag.id !== action.tagId),
+        entities: {
+          ...state.entities,
+          customers: {
+            ...state.entities.customers,
+            [customerId]: {
+              ...state.entities.customers[customerId],
+              tags: state.entities.customers[customerId].tags.filter((tag) => tag.id !== tagId),
+            },
+          },
         },
       };
     }

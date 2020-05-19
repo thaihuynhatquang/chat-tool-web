@@ -14,11 +14,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchCurrentUserSucceed } from './actions';
 import * as services from './services';
+import * as storeGetter from 'shared/getEntities';
 import { branch, mapProps, renderNothing, compose } from 'recompose';
 import { withFetcher } from 'shared/hooks';
 
 const App = () => (
-  <div className='position-absolute d-flex' style={{ left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden' }}>
+  <div className='position-absolute d-flex ' style={{ left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden' }}>
     <div className='flex-grow-0 flex-shrink-0' style={{ width: 70 }}>
       <div className='d-flex flex-column justify-content-between border-right text-center h-100 '>
         <Channels />
@@ -52,7 +53,7 @@ const App = () => (
   </div>
 );
 
-const mapState = (state) => ({ user: state.user });
+const mapState = (state) => ({ user: storeGetter.getUser(state) });
 const mapDispatch = (dispatch) => bindActionCreators({ fetchCurrentUserSucceed }, dispatch);
 
 const enhance = compose(
@@ -74,4 +75,3 @@ const enhance = compose(
 );
 
 export default enhance(App);
-// export default App;

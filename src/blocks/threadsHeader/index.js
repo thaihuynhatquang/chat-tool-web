@@ -3,13 +3,11 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
 const mapState = (state) => {
-  const {
-    threads: { totalCount, filterBy },
-  } = state;
+  const { totalThreadsCount, filterThreadsBy } = state;
 
   return {
-    count: totalCount,
-    filterBy,
+    count: totalThreadsCount,
+    filterBy: filterThreadsBy,
   };
 };
 

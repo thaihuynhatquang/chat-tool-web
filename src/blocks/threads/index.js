@@ -5,19 +5,18 @@ import { withFetcher, withLoading, withInfiniteScroll, withEmpty } from 'shared/
 import Threads from './components/Threads';
 import { fetchThreadsSucceed, selectThread, fetchMoreThreadsSucceed, fetchMoreThreadsError } from './actions';
 import { fetchThreadsByChannelId } from './services';
+import * as storeGetter from 'shared/getEntities';
 
 const PAGING_LIMIT_THREADS = 20;
 
 const mapState = (state) => {
-  const {
-    threads: { items, itemsById, thread, filterBy, totalCount },
-  } = state;
-  const threads = items.map((key) => itemsById[key]);
+  const { totalThreadsCount, filterThreadsBy, selectedThreadId, selectedChannelId } = state;
   return {
-    threads,
-    selectedThreadId: thread && thread.id,
-    filterBy,
-    totalCount,
+    threads: storeGetter.getThreads(state),
+    selectedChannelId,
+    selectedThreadId,
+    filterBy: filterThreadsBy,
+    totalCount: totalThreadsCount,
   };
 };
 
@@ -42,9 +41,11 @@ const withFetcherAPI = withFetcher(
   'threads',
   async (props) => {
     const {
+      selectedChannelId,
       filterBy: { sort, ...otherFilter },
     } = props;
     const input = {
+      channelId: selectedChannelId,
       limit: props.limit,
       ...otherFilter,
       ...(sort && {
@@ -57,7 +58,7 @@ const withFetcherAPI = withFetcher(
     return res;
   },
   {
-    fetchOnPropsChange: ['filterBy'],
+    fetchOnPropsChange: ['selectedChannelId', 'filterBy'],
   },
 );
 
@@ -81,8 +82,8 @@ const enhance = compose(
   connect(mapState, mapDispatch),
   withFetcherAPI,
   withLoadingAPI,
-  withSelectThread,
   withEmpty((props) => props.threads.length === 0),
+  withSelectThread,
   // Scroll event
   withInfiniteScroll(
     CONTAINER_ID,
@@ -97,11 +98,11 @@ const enhance = compose(
       } = props;
       const input = {
         limit: props.limit,
-        nextCursor: props.nextCursor,
         ...otherFilter,
         ...(sort && {
           sort: [['updatedAt', sort]],
         }),
+        nextCursor: props.nextCursor,
       };
 
       const res = await fetchThreadsByChannelId(input);

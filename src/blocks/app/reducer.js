@@ -1,10 +1,24 @@
 import { FETCH_CURRENT_USER_SUCCEED } from './actions';
+
 import { initStoreState } from 'configs/initState';
 
-export const userInApp = (state = initStoreState.user, action) => {
+export default (state = initStoreState, action) => {
   switch (action.type) {
-    case FETCH_CURRENT_USER_SUCCEED:
-      return action.user;
+    case FETCH_CURRENT_USER_SUCCEED: {
+      const { user } = action;
+      console.log(initStoreState)
+      return {
+        ...state,
+        userId: user.id,
+        entities: {
+          ...state.entities,
+          users: {
+            ...state.entities.users,
+            [user.id]: user,
+          },
+        },
+      };
+    }
     default:
       return state;
   }

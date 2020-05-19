@@ -4,14 +4,13 @@ import { connect } from 'react-redux';
 import { branch, mapProps, renderNothing, withHandlers, compose } from 'recompose';
 import * as actions from './actions';
 import * as services from './services';
+import * as storeGetter from 'shared/getEntities';
 
 const mapState = (state) => {
-  const {
-    customer: { item },
-  } = state;
+  const customer = storeGetter.getCustomer(state);
   return {
-    customerId: item && item.id,
-    notes: item && Array.isArray(item.notes) ? item.notes.reverse() : [],
+    customerId: customer && customer.id,
+    notes: customer && Array.isArray(customer.notes) ? customer.notes.reverse() : [],
   };
 };
 
@@ -27,7 +26,7 @@ const enhance = compose(
         props.createNoteToCustomer({ customerId, note: res });
       });
     },
-    updateNote: (props) => (noteId, content) => {
+    updateNote: (props) => (noteId, content) => () => {
       const { customerId } = props;
       services.updateNoteToCustomer({ customerId, noteId, content }).then((res) => {
         props.updateNoteOfCustomer({ customerId, note: res });

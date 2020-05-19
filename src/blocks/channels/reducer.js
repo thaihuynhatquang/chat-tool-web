@@ -1,36 +1,23 @@
 import { FETCH_CHANNELS_SUCCEED, SELECT_CHANNEL } from './actions';
 
-const initState = {
-  items: [],
-  itemsById: {},
-  totalCount: 0,
-  selectedChannelId: null,
-};
+import { initStoreState } from 'configs/initState';
 
-export const threadsInChannels = (state, action) => {
+export default (state = initStoreState, action) => {
   switch (action.type) {
-    case SELECT_CHANNEL:
+    case FETCH_CHANNELS_SUCCEED: {
+      const { result, entities } = action.norm;
       return {
         ...state,
-        filterBy: {
-          ...state.filterBy,
-          channelId: action.id,
+        channels: result,
+        entities: {
+          ...state.entities,
+          channels: {
+            ...state.entities.channels,
+            ...entities.channels,
+          },
         },
       };
-    default:
-      return state;
-  }
-};
-
-export default (state = initState, action) => {
-  switch (action.type) {
-    case FETCH_CHANNELS_SUCCEED:
-      return {
-        ...state,
-        items: action.norm.result,
-        itemsById: action.norm.entities.channels || {},
-        totalCount: action.data.count,
-      };
+    }
     case SELECT_CHANNEL:
       return {
         ...state,

@@ -4,14 +4,13 @@ import { connect } from 'react-redux';
 import { branch, mapProps, renderNothing, withHandlers, compose } from 'recompose';
 import * as actions from './actions';
 import * as services from './services';
+import * as storeGetter from 'shared/getEntities';
 
 const mapState = (state) => {
-  const {
-    customer: { item },
-  } = state;
+  const customer = storeGetter.getCustomer(state);
   return {
-    customerId: item && item.id,
-    tags: item && Array.isArray(item.tags) ? item.tags : [],
+    customerId: customer && customer.id,
+    tags: customer && Array.isArray(customer.tags) ? customer.tags : [],
   };
 };
 
@@ -24,7 +23,7 @@ const enhance = compose(
     addTag: (props) => (tag) => {
       const { customerId } = props;
       const { id: tagId } = tag;
-      services.addTagToCustomer({ customerId, tagId }).then(() => props.addTagToCustomer(tag));
+      services.addTagToCustomer({ customerId, tagId }).then(() => props.addTagToCustomer({ customerId, tag }));
     },
     searchTags: (props) => async (searchValue) => {
       const { tags } = props;
@@ -35,7 +34,9 @@ const enhance = compose(
     },
     removeTag: (props) => (tagId) => () => {
       const { customerId } = props;
-      services.removeTagFromCustomer({ customerId, tagId }).then(() => props.removeTagFromCustomer(tagId));
+      services
+        .removeTagFromCustomer({ customerId, tagId })
+        .then(() => props.removeTagFromCustomer({ customerId, tagId }));
     },
   }),
   mapProps(({ customerId, addTagToCustomer, removeTagFromCustomer, ...rest }) => rest),

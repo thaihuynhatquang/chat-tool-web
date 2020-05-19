@@ -1,24 +1,31 @@
 import { FETCH_MESSAGES_SUCCEED, FETCH_MORE_MESSAGES_SUCCEED } from './actions';
+import { unionArray } from 'shared/utils';
 import { initStoreState } from 'configs/initState';
 
-export default (state = initStoreState.messages, action) => {
+export default (state = initStoreState, action) => {
   switch (action.type) {
     case FETCH_MESSAGES_SUCCEED: {
       const { entities, result } = action.norm;
       return {
         ...state,
-        items: result,
-        itemsById: entities.messages,
+        messages: result,
+        entities: {
+          ...state.entities,
+          messages: entities.messages || {},
+        },
       };
     }
     case FETCH_MORE_MESSAGES_SUCCEED: {
       const { entities, result } = action.norm;
       return {
         ...state,
-        items: [...state.items, ...result],
-        itemsById: {
-          ...state.itemsById,
-          ...entities.messages,
+        messages: unionArray([...state.messages, ...result]),
+        entities: {
+          ...state.entities,
+          messages: {
+            ...state.entities.messages,
+            ...entities.messages,
+          },
         },
       };
     }

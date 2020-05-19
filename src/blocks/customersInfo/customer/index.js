@@ -5,13 +5,17 @@ import { branch, mapProps, renderNothing, withHandlers, compose } from 'recompos
 import { withFetcher, withLoading } from 'shared/hooks';
 import * as actions from './actions';
 import * as services from './services';
+import * as storeGetter from 'shared/getEntities';
 
 const mapState = (state) => {
-  const {
-    threads: { thread },
-    customer: { item, totalCount },
-  } = state;
-  return { threadId: thread && thread.id, customer: item, totalCount };
+  const { totalCustomersCount } = state;
+  const thread = storeGetter.getSelectedThread(state);
+  const customer = storeGetter.getCustomer(state);
+  return {
+    threadId: thread && thread.id,
+    customer,
+    totalCount: totalCustomersCount,
+  };
 };
 
 const mapDispatch = (dispatch) => bindActionCreators(actions, dispatch);

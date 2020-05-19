@@ -8,19 +8,18 @@ import { withFetcher, withScroll } from 'shared/hooks';
 import { SEND_STATUS_PENDING, SEND_STATUS_ARRIVED, SEND_STATUS_COMPLETED } from './constants';
 import * as actions from './actions';
 import * as services from './services';
+import * as storeGetter from 'shared/getEntities';
 
 const mapState = (state) => {
-  const {
-    messages: { items, itemsById },
-    pendingMessages: { items: pendItems, itemsById: pendItemsById },
-    threads: { thread },
-    user,
-  } = state;
+  const { pendingMessages } = state;
+  const user = storeGetter.getUser(state);
+  const thread = storeGetter.getSelectedThread(state);
   const readAtValue = thread && thread.readAt;
-  const pendingMessages = pendItems
-    .filter((key) => thread && pendItemsById[key].threadId === thread.id)
-    .map((key) => {
-      const { identifier, threadId, message, messageId, errorMessage } = pendItemsById[key];
+
+  const formattedPendingMessages = pendingMessages
+    .filter((item) => thread && item.threadId === thread.id)
+    .map((item) => {
+      const { identifier, threadId, message, messageId, errorMessage } = item;
       const createdAt = moment(identifier, 'x');
       return {
         mid: identifier,
@@ -36,17 +35,13 @@ const mapState = (state) => {
         msgUpdatedAt: createdAt,
       };
     });
-  const messages = items.map((key) => ({
-    ...itemsById[key],
+  const messages = storeGetter.getMessages(state).map((item) => ({
+    ...item,
     sendingStatus:
-      itemsById[key].isVerified && readAtValue
-        ? itemsById[key].msgCreatedAt > readAtValue
-          ? SEND_STATUS_COMPLETED
-          : null
-        : null,
+      item.isVerified && readAtValue ? (item.msgCreatedAt > readAtValue ? SEND_STATUS_COMPLETED : null) : null,
   }));
   // Create merge messages. NOTE: Array in latest-message-first order.
-  const mergeMessages = [...[...pendingMessages].reverse(), ...messages].map((message, index, array) => ({
+  const mergeMessages = [...[...formattedPendingMessages].reverse(), ...messages].map((message, index, array) => ({
     ...message,
     isShowName: index === array.length - 1 || !!message.isVerified !== !!array[index + 1].isVerified,
     isShowAvatar: index === 0 || !!message.isVerified !== !!array[index - 1].isVerified,
@@ -63,8 +58,8 @@ const mapDispatch = (dispatch) => bindActionCreators(actions, dispatch);
 
 const enhance = compose(
   connect(mapState, mapDispatch),
-  withState('nextCursor', 'setNextCursor', ''),
   branch((props) => !props.threadId, renderNothing),
+  withState('nextCursor', 'setNextCursor', ''),
   withFetcher(
     'messages',
     async (props) => {

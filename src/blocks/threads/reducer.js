@@ -1,51 +1,55 @@
-import { FETCH_THREADS_SUCCEED, SELECT_THREAD, FETCH_MORE_THREADS_SUCCEED } from './actions';
+import { FETCH_THREADS_SUCCEED, FETCH_MORE_THREADS_SUCCEED, SELECT_THREAD } from './actions';
 import { unionArray } from 'shared/utils';
 import { initStoreState } from 'configs/initState';
 
-const initState = initStoreState.threads;
-
-export default (state = initState, action) => {
+export default (state = initStoreState, action) => {
   switch (action.type) {
-    case FETCH_THREADS_SUCCEED:
+    case FETCH_THREADS_SUCCEED: {
+      const { result, entities } = action.norm;
       return {
         ...state,
-        items: action.norm.result,
-        itemsById: action.norm.entities.threads || {},
+        threads: result,
+        entities: {
+          ...state.entities,
+          threads:
+            !state.selectedThreadId || result.includes(state.selectedThreadId)
+              ? entities.threads || {}
+              : {
+                  ...entities.threads,
+                  [state.selectedThreadId]: state.entities.threads[state.selectedThreadId],
+                },
+        },
+        totalThreadsCount: action.data.count,
+      };
+    }
+    case FETCH_MORE_THREADS_SUCCEED: {
+      const { result, entities } = action.norm;
+      return {
+        ...state,
+        threads: unionArray([...state.threads, ...result]),
+        entities: {
+          ...state.entities,
+          threads: {
+            ...state.entities.threads,
+            ...entities.threads,
+          },
+        },
         totalCount: action.data.count,
       };
-    case FETCH_MORE_THREADS_SUCCEED:
+    }
+    case SELECT_THREAD: {
+      const { [state.customerId || 0]: _omit, ...nextCustomersEntities } = state.entities.customers;
       return {
         ...state,
-        items: unionArray([...state.items, ...action.norm.result]),
-        itemsById: { ...state.itemsById, ...action.norm.entities.threads },
-        totalCount: action.data.count,
+        selectedThreadId: action.id,
+        messages: [],
+        customerId: null,
+        entities: {
+          ...state.entities,
+          customers: nextCustomersEntities,
+        },
       };
-    case SELECT_THREAD:
-      return {
-        ...state,
-        thread: state.itemsById[action.id],
-      };
-    default:
-      return state;
-  }
-};
-
-export const messagesInThreads = (state = initStoreState.messages, action) => {
-  switch (action.type) {
-    case SELECT_THREAD:
-      return {
-        ...state,
-        threadId: action.id,
-      };
-    default:
-      return state;
-  }
-};
-
-export const customerInThreads = (state = initStoreState.customer, action) => {
-  switch (action.type) {
-    case SELECT_THREAD:
-      return initStoreState.customer;
+    }
     default:
       return state;
   }

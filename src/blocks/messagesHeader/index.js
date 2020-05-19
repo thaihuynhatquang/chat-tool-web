@@ -3,13 +3,11 @@ import { connect } from 'react-redux';
 import { branch, mapProps, renderNothing, renameProps, withHandlers, compose } from 'recompose';
 import { THREAD_STATUS_SPAM, THREAD_STATUS_PROCESSING, THREAD_STATUS_DONE } from 'common/constants';
 import * as services from './services';
+import * as storeGetter from 'shared/getEntities';
 
-const mapState = (state) => {
-  const {
-    threads: { thread },
-  } = state;
-  return { selectedThread: thread };
-};
+const mapState = (state) => ({
+  selectedThread: storeGetter.getSelectedThread(state),
+});
 
 const enhance = compose(
   connect(mapState, null),

@@ -8,7 +8,7 @@ import { changeFilterBy } from './actions';
 const enhanceNormalMode = compose(
   connect(
     (state) => ({
-      initSearchText: state.threads.filterBy.title || '',
+      initSearchText: state.filterThreadsBy.title || '',
     }),
     (dispatch) => bindActionCreators({ changeFilterBy }, dispatch),
   ),
@@ -29,13 +29,9 @@ const enhanceNormalMode = compose(
 const enhanceAdvanceMode = compose(
   connect(
     (state) => {
-      const {
-        threads: {
-          filterBy: { channelId, ...filterBy },
-        },
-      } = state;
+      const { filterThreadsBy } = state;
       return {
-        storeFilterBy: filterBy,
+        storeFilterBy: filterThreadsBy,
       };
     },
     (dispatch) => bindActionCreators({ changeFilterBy }, dispatch),

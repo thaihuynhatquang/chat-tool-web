@@ -1,15 +1,13 @@
 import { CHANGE_FILTER_BY } from './actions';
 import { initStoreState } from 'configs/initState';
 
-const initState = initStoreState.threads;
-
-export const threadsInThreadSearch = (state = initState, action) => {
+export default (state = initStoreState, action) => {
   switch (action.type) {
     case CHANGE_FILTER_BY:
       return {
         ...state,
-        filterBy: {
-          ...state.filterBy,
+        filterThreadsBy: {
+          ...state.filterThreadsBy,
           ...action.filterBy,
         },
       };

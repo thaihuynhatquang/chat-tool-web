@@ -2,15 +2,14 @@ import { compose, withState, branch, renderNothing } from 'recompose';
 import ThreadInfo from './components/ThreadInfo';
 import { withFetcher, withLoading } from 'shared/hooks';
 import { fetchActiveStaffs, fetchHistoryStaffs } from './services';
+import * as storeGetter from 'shared/getEntities';
 import { connect } from 'react-redux';
 
 const mapState = (state) => {
-  const {
-    threads: { thread },
-  } = state;
+  const { selectedThreadId } = state;
   return {
-    selectedThreadId: thread && thread.id,
-    thread,
+    selectedThreadId,
+    thread: storeGetter.getSelectedThread(state),
   };
 };
 

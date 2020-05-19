@@ -1,22 +1,39 @@
 import { FETCH_CUSTOMERS_IN_THREAD_SUCCEED, SELECT_CUSTOMER } from './actions';
 import { initStoreState } from 'configs/initState';
 
-export default (state = initStoreState.customer, action) => {
+export default (state = initStoreState, action) => {
   switch (action.type) {
     case FETCH_CUSTOMERS_IN_THREAD_SUCCEED: {
       const { result, entities } = action.norm;
       const firstCustomerId = result.length > 0 ? result[0] : null;
       return {
         ...state,
-        item: firstCustomerId ? entities.customers[firstCustomerId] : null,
-        totalCount: action.data.count,
+        customerId: firstCustomerId,
+        entities: {
+          ...state.entities,
+          customers: {
+            ...state.entities.customers,
+            ...entities.customers,
+          },
+        },
+        totalCustomersCount: action.data.count,
       };
     }
-    case SELECT_CUSTOMER:
+    case SELECT_CUSTOMER: {
+      const { customer } = action;
+      // TODO: Should filter previous customer if not in used
       return {
         ...state,
-        item: action.customer,
+        customerId: customer.id,
+        entities: {
+          ...state.entities,
+          customers: {
+            ...state.entities.customers,
+            [customer.id]: customer,
+          },
+        },
       };
+    }
     default:
       return state;
   }
