@@ -14,6 +14,14 @@
   outline: 0;
 }
 
+.inline-input-border {
+  border-left: 0!important;
+  border-right: 0!important;
+  border-top: 0!important;
+  border-radius: 0!important;
+  box-shadow: none!important;
+}
+
 .mw-55 {
   max-width: 55%;
 }

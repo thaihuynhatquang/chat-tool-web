@@ -38,7 +38,12 @@ const mapState = (state) => {
     });
   const messages = items.map((key) => ({
     ...itemsById[key],
-    sendingStatus: readAtValue ? (itemsById[key].msgCreatedAt > readAtValue ? SEND_STATUS_COMPLETED : null) : null,
+    sendingStatus:
+      itemsById[key].isVerified && readAtValue
+        ? itemsById[key].msgCreatedAt > readAtValue
+          ? SEND_STATUS_COMPLETED
+          : null
+        : null,
   }));
   // Create merge messages. NOTE: Array in latest-message-first order.
   const mergeMessages = [...[...pendingMessages].reverse(), ...messages].map((message, index, array) => ({

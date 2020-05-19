@@ -31,18 +31,27 @@ const statusNameMap = {
 };
 
 const Header = (props) => {
-  const { status, count } = props;
+  const {
+    filterBy: { status, title, isMiss, sort },
+    count,
+  } = props;
   const selectStatus = statusNameMap[status];
+  const searchStatus = [selectStatus.name];
+  if (title) searchStatus.push(`Tên '${title}'`);
+  if (isMiss) searchStatus.push('Chưa trả lời');
+  if (sort && sort === 'asc') searchStatus.push('Cũ nhất');
 
   return (
     <UncontrolledDropdown>
       <DropdownToggle className='w-100' color='light'>
-        <span>{selectStatus.name}</span>
-        {count > 0 && (
-          <Badge color='danger' pill>
-            {count}
-          </Badge>
-        )}
+        <small>
+          <span>{searchStatus.join(', ')}</span>
+          {count > 0 && (
+            <Badge color='danger' pill className='ml-1'>
+              {count}
+            </Badge>
+          )}
+        </small>
       </DropdownToggle>
     </UncontrolledDropdown>
   );

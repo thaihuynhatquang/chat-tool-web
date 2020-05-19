@@ -1,7 +1,7 @@
 import { compose, withProps, withHandlers, withState } from 'recompose';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { withFetcher, withLoading, withInfiniteScroll } from 'shared/hooks';
+import { withFetcher, withLoading, withInfiniteScroll, withEmpty } from 'shared/hooks';
 import Threads from './components/Threads';
 import { fetchThreadsSucceed, selectThread, fetchMoreThreadsSucceed, fetchMoreThreadsError } from './actions';
 import { fetchThreadsByChannelId } from './services';
@@ -13,18 +13,16 @@ const mapState = (state) => {
     threads: { items, itemsById, thread, filterBy, totalCount },
   } = state;
   const threads = items.map((key) => itemsById[key]);
-  const { selectedChannelId } = state.channels;
   return {
     threads,
-    selectedChannelId: selectedChannelId,
     selectedThreadId: thread && thread.id,
     filterBy,
     totalCount,
   };
 };
 
-const mapDispatch = (dispatch) => {
-  return bindActionCreators(
+const mapDispatch = (dispatch) =>
+  bindActionCreators(
     {
       fetchThreadsSucceed,
       selectThread,
@@ -33,7 +31,6 @@ const mapDispatch = (dispatch) => {
     },
     dispatch,
   );
-};
 
 const withSelectThread = withHandlers({
   onSelectThread: (props) => (id) => () => {
@@ -44,11 +41,15 @@ const withSelectThread = withHandlers({
 const withFetcherAPI = withFetcher(
   'threads',
   async (props) => {
+    const {
+      filterBy: { sort, ...otherFilter },
+    } = props;
     const input = {
-      channelId: props.selectedChannelId,
       limit: props.limit,
-      title: props.filterBy.title,
-      // status: props.filterBy.status,
+      ...otherFilter,
+      ...(sort && {
+        sort: [['updatedAt', sort]],
+      }),
     };
     const res = await fetchThreadsByChannelId(input);
     props.fetchThreadsSucceed(res);
@@ -56,7 +57,7 @@ const withFetcherAPI = withFetcher(
     return res;
   },
   {
-    fetchOnPropsChange: ['selectedChannelId', 'filterBy'],
+    fetchOnPropsChange: ['filterBy'],
   },
 );
 
@@ -81,6 +82,7 @@ const enhance = compose(
   withFetcherAPI,
   withLoadingAPI,
   withSelectThread,
+  withEmpty((props) => props.threads.length === 0),
   // Scroll event
   withInfiniteScroll(
     CONTAINER_ID,
@@ -90,12 +92,16 @@ const enhance = compose(
     },
     (props) => !!props.nextCursor && props.threads.length !== props.totalCount,
     async (props) => {
+      const {
+        filterBy: { sort, ...otherFilter },
+      } = props;
       const input = {
-        channelId: props.selectedChannelId,
         limit: props.limit,
-        title: props.filterBy.title,
-        // status: props.filterBy.status,
         nextCursor: props.nextCursor,
+        ...otherFilter,
+        ...(sort && {
+          sort: [['updatedAt', sort]],
+        }),
       };
 
       const res = await fetchThreadsByChannelId(input);

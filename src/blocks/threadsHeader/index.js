@@ -2,19 +2,16 @@ import ThreadHeader from './components/ThreadHeader';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
-const mapProps = (state) => {
+const mapState = (state) => {
   const {
-    threads: {
-      totalCount,
-      filterBy: { status },
-    },
+    threads: { totalCount, filterBy },
   } = state;
 
   return {
     count: totalCount,
-    status,
+    filterBy,
   };
 };
 
-const enchance = compose(connect(mapProps));
-export default enchance(ThreadHeader);
+const enhance = compose(connect(mapState));
+export default enhance(ThreadHeader);

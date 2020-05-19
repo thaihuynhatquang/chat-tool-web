@@ -21,10 +21,10 @@ const App = () => (
     <div className='flex-grow-0 flex-shrink-0' style={{ width: 70 }}>
       <Channels />
     </div>
-    <div className='flex-grow-0 flex-shrink-0' style={{ width: '22%' }}>
+    <div className='flex-grow-0 flex-shrink-0' style={{ width: '25%' }}>
       <div className='h-100 d-flex flex-column position-relative'>
         <ThreadHeader />
-        <div className='py-3 border-bottom'>
+        <div className='px-2 pt-2 border-bottom'>
           <ThreadSearch />
         </div>
         <div id='threadlist' className='h-100' style={{ overflowX: 'hidden' }}>
