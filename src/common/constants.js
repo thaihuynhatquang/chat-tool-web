@@ -8,4 +8,6 @@ module.exports = {
   SOCKET_UPDATE_THREAD_READ: 'update-thread-read',
   CHANNEL_SOCKET_KEY: 'channel',
   THREAD_SOCKET_KEY: 'thread',
+
+  DEFAULT_AVATAR_URL: '/images/default.png',
 };

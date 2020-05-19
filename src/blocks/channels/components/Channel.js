@@ -1,6 +1,7 @@
 import React from 'react';
 import { UncontrolledTooltip } from 'reactstrap';
 import classNames from 'classnames';
+import { DEFAULT_AVATAR_URL } from 'common/constants';
 
 const Channel = (props) => {
   const {
@@ -9,7 +10,7 @@ const Channel = (props) => {
     onSelectChannel,
   } = props;
   const elementId = `channel-${id}`;
-  const avatarUrl = (additionData && additionData.avatarUrl) || '/images/default.png';
+  const avatarUrl = (additionData && additionData.avatarUrl) || DEFAULT_AVATAR_URL;
   return (
     <div
       id={elementId}

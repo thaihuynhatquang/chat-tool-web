@@ -4,7 +4,7 @@ import Channel from './Channel';
 const Channels = (props) => {
   const { channels, selectedChannelId, onSelectChannel } = props;
   return (
-    <div className='d-inline-block border-right text-center h-100'>
+    <div>
       {channels.map((channel) => (
         <Channel
           key={channel.id}

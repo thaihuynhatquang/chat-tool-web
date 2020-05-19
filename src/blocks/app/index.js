@@ -8,6 +8,7 @@ import Messages from 'blocks/messages';
 import MessagesSendBox from 'blocks/messagesSendBox';
 import ThreadInfo from 'blocks/threadsInfo';
 import CustomerInfo from 'blocks/customersInfo';
+import User from 'blocks/user';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -19,7 +20,10 @@ import { withFetcher } from 'shared/hooks';
 const App = () => (
   <div className='position-absolute d-flex' style={{ left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden' }}>
     <div className='flex-grow-0 flex-shrink-0' style={{ width: 70 }}>
-      <Channels />
+      <div className='d-flex flex-column justify-content-between border-right text-center h-100 '>
+        <Channels />
+        <User />
+      </div>
     </div>
     <div className='flex-grow-0 flex-shrink-0' style={{ width: '25%' }}>
       <div className='h-100 d-flex flex-column position-relative'>
