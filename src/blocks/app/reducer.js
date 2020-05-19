@@ -6,7 +6,6 @@ export default (state = initStoreState, action) => {
   switch (action.type) {
     case FETCH_CURRENT_USER_SUCCEED: {
       const { user } = action;
-      console.log(initStoreState)
       return {
         ...state,
         userId: user.id,
