@@ -6,15 +6,39 @@ export default (state = initStoreState, action) => {
   switch (action.type) {
     case SOCKET_NEW_MESSAGE: {
       const { result, entities } = action.norm;
+      const addMessage = entities.messages[result];
+      const parentMessage = addMessage.parentId ? state.entities.messages[addMessage.parentId] : null;
+      const nextMessages = addMessage.parentId ? state.messages : unionArray([result, ...state.messages]);
+      const nextEntitiesMessages = {
+        ...state.entities.messages,
+        // Should not add entity if is 2LV message and store doesn't have the parent
+        ...(!addMessage.parentId || !parentMessage ? entities.messages : null),
+        // Check if we should update Parent Message entity in store
+        ...(parentMessage
+          ? parentMessage.replies
+            ? {
+                [addMessage.parentId]: {
+                  ...parentMessage.replies, // Keep the next cursor if has any
+                  count: parentMessage.replies.count + 1,
+                  data: [result, ...parentMessage.replies.data],
+                },
+              }
+            : {
+                [addMessage.parentId]: {
+                  count: 1,
+                  data: [result],
+                },
+              }
+          : null),
+      };
       return {
         ...state,
-        messages: [result, ...state.messages],
+        messages: nextMessages,
         pendingMessages: state.pendingMessages.filter((item) => item.messageId !== result),
         entities: {
           ...state.entities,
           messages: {
-            ...state.entities.messages,
-            ...entities.messages,
+            ...nextEntitiesMessages,
           },
           customers: {
             ...state.entities.customers,

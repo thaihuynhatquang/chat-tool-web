@@ -1,19 +1,35 @@
 import React, { Fragment } from 'react';
+import { compose, mapProps, withHandlers, withStateHandlers } from 'recompose';
+import classNames from 'classnames';
 import messengerIcons from 'emoji-mart/data/messenger.json';
 import { NimblePicker } from 'emoji-mart';
 
 const sharedIconClass = 'fa-lg px-2 align-bottom text-secondary';
-const sendBoxHeight = 80;
 
 const SendBox = (props) => {
-  const { disabled = false, isShowEmoji, message, toggleEmoji, onMessageChange, onSelectEmoji, sendMessage } = props;
+  const {
+    height = 80,
+    size = 'md',
+    disabled = false,
+    isShowEmoji,
+    message,
+    toggleEmoji,
+    onMessageChange,
+    onSelectEmoji,
+    sendMessage,
+    resetSendBox,
+  } = props;
 
+  const sendAndResetBox = () => {
+    sendMessage({ message });
+    resetSendBox();
+  };
   const sendMessageOnEnter = (e) => {
-    if (e.key === 'Enter') sendMessage();
+    if (e.key === 'Enter') sendAndResetBox();
   };
 
   return (
-    <div style={{ height: sendBoxHeight }} className='border-top d-flex justify-content-between align-items-center'>
+    <div style={{ height }} className='d-flex justify-content-between align-items-center'>
       {disabled ? (
         <div className='text-secondary text-center w-100 cursor-disabled'>
           Không thể gửi tin nhắn trong cuộc hội thoại này
@@ -22,11 +38,14 @@ const SendBox = (props) => {
         <Fragment>
           <input
             value={message}
-            className='border-0 flex-grow-1 pl-3 text-dark focus-highlight-disabled'
+            className={classNames('border-0 flex-grow-1 ml-4 text-dark focus-highlight-disabled', {
+              'font-size-sm': size === 'sm',
+            })}
             placeholder='Nhập tin nhắn...'
             onChange={onMessageChange}
             onKeyPress={sendMessageOnEnter}
           />
+
           <span className='px-3 text-secondary position-relative'>
             <label>
               <input id='send-file-inp' type='file' className='d-none' />
@@ -37,7 +56,7 @@ const SendBox = (props) => {
               <button className='btn btn-link p-0' onClick={toggleEmoji}>
                 <i className={`${sharedIconClass} far fa-smile-wink text-primary-hover`} />
               </button>
-              <button className='btn btn-link p-0' onClick={sendMessage}>
+              <button className='btn btn-link p-0' onClick={sendAndResetBox}>
                 <i className={`${sharedIconClass} far fa-paper-plane text-primary-hover`} />
               </button>
             </label>
@@ -64,4 +83,37 @@ const SendBox = (props) => {
   );
 };
 
-export default SendBox;
+const enhance = compose(
+  withStateHandlers(
+    {
+      isShowEmoji: false,
+    },
+    {
+      toggleEmoji: ({ isShowEmoji }) => () => ({
+        isShowEmoji: !isShowEmoji,
+      }),
+      hideEmoji: () => () => ({
+        isShowEmoji: false,
+      }),
+    },
+  ),
+  withStateHandlers(
+    { message: '' },
+    {
+      onMessageChange: ({ message }) => (e) => ({ message: e.target.value }),
+      onSelectEmoji: ({ message }) => (emoji) => ({
+        message: message + emoji.native,
+      }),
+      resetMessage: () => () => ({ message: '' }),
+    },
+  ),
+  withHandlers({
+    resetSendBox: (props) => () => {
+      props.hideEmoji();
+      props.resetMessage();
+    },
+  }),
+  mapProps(({ resetMessage, hideEmoji, ...rest }) => rest),
+);
+
+export default enhance(SendBox);

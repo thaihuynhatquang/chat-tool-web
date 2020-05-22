@@ -17,7 +17,18 @@ const Header = (props) => {
           width={avatarSize}
           height={avatarSize}
         />
-        <div className='p-2'>{thread.title}</div>
+        <div className='p-2'>
+          {additionData && additionData.url ? (
+            <a href={additionData.url} className='btn btn-link' target='_blank' rel='noopener noreferrer'>
+              {thread.title}
+              <small>
+                <i className='ml-2 fas fa-external-link-alt fa-xs' />
+              </small>
+            </a>
+          ) : (
+            thread.title
+          )}
+        </div>
       </div>
       <div className='btn-group h-100'>
         {status !== THREAD_STATUS_SPAM && (

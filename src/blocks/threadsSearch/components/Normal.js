@@ -12,6 +12,7 @@ export const Search = (props) => {
         type='search'
         name='thread-search'
         placeholder='Tìm kiếm...'
+        autoComplete='off'
         defaultValue={initSearchText}
         onChange={onChangeSearchText}
         onKeyUp={onSearch}

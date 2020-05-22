@@ -7,4 +7,14 @@ const ThreadWrapper = (story) => <div style={{ width: '28%', height: 600 }}>{sto
 
 storiesOf('ThreadHeader', module)
   .addDecorator(ThreadWrapper)
-  .add('simple', () => <ThreadHeader status='processing' count={30} />);
+  .add('simple', () => (
+    <ThreadHeader
+      filterBy={{
+        status: 'processing',
+        title: 'Lê Hải Nam',
+        isMiss: true,
+        sort: 'asc',
+      }}
+      count={30}
+    />
+  ));

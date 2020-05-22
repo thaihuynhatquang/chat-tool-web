@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import classNames from 'classnames';
 import { Row, Col, Input, CustomInput } from 'reactstrap';
@@ -14,7 +13,7 @@ const contentSize = 12 - labelSize;
 const pillButtonClass = 'btn btn-sm px-1 py-0 mr-2';
 
 const statusNameMap = {
-  [THREAD_STATUS_UNREAD]: 'Chưa đọc',
+  [THREAD_STATUS_UNREAD]: 'Chưa xử lý',
   [THREAD_STATUS_PROCESSING]: 'Hoạt động',
   [THREAD_STATUS_SPAM]: 'Spam',
   [THREAD_STATUS_DONE]: 'Hoàn thành',
@@ -22,14 +21,21 @@ const statusNameMap = {
 
 const ORDER_DESC = 'desc';
 const ORDER_ASC = 'asc';
+const DEFAULT_LOCAL_FILTER = {
+  title: '',
+  status: THREAD_STATUS_PROCESSING,
+  sort: ORDER_DESC,
+  isMiss: false,
+};
 
 const AdvanceThreadSearch = (props) => {
+  const { onSearch, toggleSearchMode, onChangeFilter, localFilterBy } = props;
   const {
-    onSearch,
-    toggleSearchMode,
-    onChangeFilter,
-    localFilterBy: { title = '', status = THREAD_STATUS_PROCESSING, sort = ORDER_DESC, isMiss = false },
-  } = props;
+    title = DEFAULT_LOCAL_FILTER.title,
+    status = DEFAULT_LOCAL_FILTER.status,
+    sort = DEFAULT_LOCAL_FILTER.sort,
+    isMiss = DEFAULT_LOCAL_FILTER.isMiss,
+  } = localFilterBy;
   return (
     <div>
       <Row className='mb-2'>
@@ -38,9 +44,11 @@ const AdvanceThreadSearch = (props) => {
         </Col>
         <Col xs={contentSize}>
           <Input
-            className='textarea-sm inline-input-border'
             bsSize='sm'
+            autoComplete='off'
+            name='thread-search'
             defaultValue={title}
+            className='textarea-sm inline-input-border'
             onChange={(e) => onChangeFilter('title', e.target.value.trim())}
           />
         </Col>

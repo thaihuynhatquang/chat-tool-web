@@ -26,7 +26,7 @@ const enhance = compose(
         props.createNoteToCustomer({ customerId, note: res });
       });
     },
-    updateNote: (props) => (noteId, content) => () => {
+    updateNote: (props) => (noteId, content) => {
       const { customerId } = props;
       services.updateNoteToCustomer({ customerId, noteId, content }).then((res) => {
         props.updateNoteOfCustomer({ customerId, note: res });

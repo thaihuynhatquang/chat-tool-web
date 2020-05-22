@@ -24,7 +24,8 @@ const User = (props) => {
             left: '4.3rem',
             minWidth: 180,
             zIndex: 1,
-          }}>
+          }}
+          onBlur={() => console.log('Blur')}>
           <li className={`${listGroupClass} text-primary`}>
             <small>Xin chào, {name}!</small>
           </li>

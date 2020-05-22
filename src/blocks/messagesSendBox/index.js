@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { branch, mapProps, renderNothing, withHandlers, withProps, withStateHandlers, compose } from 'recompose';
+import { branch, mapProps, renderNothing, withHandlers, withProps, compose } from 'recompose';
 import { THREAD_STATUS_DONE } from 'common/constants';
 import { MESSAGE_TYPE_TEXT, MESSAGE_TYPE_FILE } from './constants';
 import SendBox from './components/SendBox';
@@ -13,65 +13,37 @@ const mapState = (state) => {
   const { selectedThreadId } = state;
   const thread = storeGetter.getSelectedThread(state);
   return {
-    selectedThreadId,
-    selectedThreadStatus: thread && thread.status,
+    threadId: selectedThreadId,
+    threadStatus: thread && thread.status,
   };
 };
 const mapDispatch = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-const enhance = compose(
-  connect(mapState, mapDispatch),
-  branch((props) => !props.selectedThreadId, renderNothing),
-  withProps((props) => ({
-    disabled: props.selectedThreadStatus === THREAD_STATUS_DONE,
-  })),
-  withStateHandlers(
-    {
-      isShowEmoji: false,
-    },
-    {
-      toggleEmoji: ({ isShowEmoji }) => () => ({
-        isShowEmoji: !isShowEmoji,
-      }),
-      hideEmoji: () => () => ({
-        isShowEmoji: false,
-      }),
-    },
-  ),
-  withStateHandlers(
-    { message: '' },
-    {
-      onMessageChange: ({ message }) => (e) => ({ message: e.target.value }),
-      onSelectEmoji: ({ message }) => (emoji) => ({
-        message: message + emoji.native,
-      }),
-      resetMessage: () => () => ({ message: '' }),
-    },
-  ),
+export const withSendMessage = compose(
+  connect(null, mapDispatch),
   withHandlers({
-    resetSendBox: (props) => () => {
-      props.hideEmoji();
-      props.resetMessage();
-    },
-  }),
-  withHandlers({
-    sendMessage: (props) => async () => {
+    sendMessage: (props) => async ({
+      threadId = props.threadId,
+      parentId = props.parentId,
+      message = props.message,
+    }) => {
       const identifier = moment().format('x');
-      const { actions, selectedThreadId, message, resetSendBox } = props;
+      const { actions } = props;
       if (!message) return;
-      resetSendBox();
       try {
         actions.sendMessage({
           identifier,
-          threadId: selectedThreadId,
+          threadId,
           message,
           messageType: message ? MESSAGE_TYPE_TEXT : MESSAGE_TYPE_FILE,
+          parentId,
         });
         const { response } = await services.sendMessage({
-          threadId: selectedThreadId,
+          threadId,
           message,
+          parentId,
         });
         actions.sendMessageSucceed({
           identifier,
@@ -85,9 +57,17 @@ const enhance = compose(
       }
     },
   }),
-  mapProps(
-    ({ actions, hideEmoji, resetSendBox, resetMessage, selectedThreadId, selectedThreadStatus, ...rest }) => rest,
-  ),
+  mapProps(({ actions, ...rest }) => rest),
+);
+
+const enhance = compose(
+  connect(mapState, mapDispatch),
+  branch((props) => !props.threadId, renderNothing),
+  withProps((props) => ({
+    disabled: props.threadStatus === THREAD_STATUS_DONE,
+  })),
+  withSendMessage,
+  mapProps(({ actions, threadId, threadStatus, ...rest }) => rest),
 );
 
 export default enhance(SendBox);

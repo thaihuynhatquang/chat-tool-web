@@ -1,6 +1,6 @@
 import reduceReducers from 'reduce-reducers';
 import channels from 'blocks/channels/reducer';
-import threads from 'blocks/threads/reducer';
+import threads, { threadsPostReducer } from 'blocks/threads/reducer';
 import threadsSearch from 'blocks/threadsSearch/reducer';
 import messages from 'blocks/messages/reducer';
 import customer from 'blocks/customersInfo/customer/reducer';
@@ -23,5 +23,6 @@ export default reduceReducers(
   pendingMessages,
   app,
   socket,
+  threadsPostReducer,
   initStoreState,
 );

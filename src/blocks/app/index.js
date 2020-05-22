@@ -41,7 +41,9 @@ const App = () => (
       <div className='d-flex h-100 justify-content-between flex-column border-left'>
         <MessagesHeader />
         <Messages />
-        <MessagesSendBox />
+        <span className='border-top'>
+          <MessagesSendBox />
+        </span>
       </div>
     </div>
     <div className='flex-grow-0 flex-shrink-0' style={{ width: '22%' }}>

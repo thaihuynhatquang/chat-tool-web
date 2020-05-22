@@ -6,10 +6,11 @@ import {
   THREAD_STATUS_SPAM,
   THREAD_STATUS_DONE,
 } from 'common/constants';
+import { pure } from 'recompose';
 
 const statusNameMap = {
   [THREAD_STATUS_UNREAD]: {
-    name: 'Chưa đọc',
+    name: 'Chưa xử lý',
     color: 'danger',
     icon: 'far fa-envelope',
   },
@@ -44,17 +45,21 @@ const Header = (props) => {
   return (
     <UncontrolledDropdown>
       <DropdownToggle className='w-100' color='light'>
-        <small>
-          <span>{searchStatus.join(', ')}</span>
-          {count > 0 && (
-            <Badge color='danger' pill className='ml-1'>
-              {count}
+        <span>
+          {searchStatus.map((item, index) => (
+            <Badge key={index} color='secondary' className='mr-1 font-weight-normal'>
+              {item}
             </Badge>
-          )}
-        </small>
+          ))}
+        </span>
+        {count > 0 && (
+          <Badge color='danger' pill>
+            <small>{count}</small>
+          </Badge>
+        )}
       </DropdownToggle>
     </UncontrolledDropdown>
   );
 };
 
-export default Header;
+export default pure(Header);

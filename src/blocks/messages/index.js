@@ -5,7 +5,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { withFetcher, withScroll } from 'shared/hooks';
-import { SEND_STATUS_PENDING, SEND_STATUS_ARRIVED, SEND_STATUS_COMPLETED } from './constants';
+import { SEND_STATUS_PENDING, SEND_STATUS_ARRIVED, SEND_STATUS_COMPLETED, FETCH_REPLIES_LIMIT } from './constants';
+import { withSendMessage } from 'blocks/messagesSendBox';
 import * as actions from './actions';
 import * as services from './services';
 import * as storeGetter from 'shared/getEntities';
@@ -14,16 +15,19 @@ const mapState = (state) => {
   const { pendingMessages } = state;
   const user = storeGetter.getUser(state);
   const thread = storeGetter.getSelectedThread(state);
+  const channel = storeGetter.getChannelById(state, thread && thread.channelId);
+  const messageLevel = storeGetter.getChannelMessageLevel(channel);
   const readAtValue = thread && thread.readAt;
 
   const formattedPendingMessages = pendingMessages
     .filter((item) => thread && item.threadId === thread.id)
     .map((item) => {
-      const { identifier, threadId, message, messageId, errorMessage } = item;
+      const { identifier, threadId, parentId, message, messageId, errorMessage } = item;
       const createdAt = moment(identifier, 'x');
       return {
         mid: identifier,
         threadId,
+        parentId,
         customer: null,
         content: message,
         sendingStatus: !messageId ? SEND_STATUS_PENDING : SEND_STATUS_ARRIVED,
@@ -39,15 +43,21 @@ const mapState = (state) => {
     ...item,
     sendingStatus:
       item.isVerified && readAtValue ? (item.msgCreatedAt > readAtValue ? SEND_STATUS_COMPLETED : null) : null,
+    replies: item.replies
+      ? {
+          ...item.replies,
+          data: [
+            ...formattedPendingMessages.filter((_item) => _item.parentId === item.mid).reverse(),
+            ...((item.replies && item.replies.data) || []),
+          ],
+        }
+      : null,
   }));
   // Create merge messages. NOTE: Array in latest-message-first order.
-  const mergeMessages = [...[...formattedPendingMessages].reverse(), ...messages].map((message, index, array) => ({
-    ...message,
-    isShowName: index === array.length - 1 || !!message.isVerified !== !!array[index + 1].isVerified,
-    isShowAvatar: index === 0 || !!message.isVerified !== !!array[index - 1].isVerified,
-  }));
+  const mergeMessages = [...[...formattedPendingMessages.filter((item) => !item.parentId)].reverse(), ...messages];
   const lastMessage = mergeMessages.length > 0 ? mergeMessages[0] : null;
   return {
+    messageLevel,
     messages: mergeMessages,
     threadId: thread && thread.id,
     readAt: thread && lastMessage && lastMessage.msgCreatedAt <= thread.readAt && thread.readAt,
@@ -66,7 +76,6 @@ const enhance = compose(
       const { fetchMessagesSucceed, threadId, setNextCursor } = props;
       const res = await services.fetchMessages({ threadId });
       setNextCursor(res.data.nextCursor);
-
       fetchMessagesSucceed(res);
     },
     {
@@ -84,6 +93,27 @@ const enhance = compose(
           node.scrollTop = node.scrollHeight;
         }, 1);
       }
+    },
+    loadMoreReplies: (props) => ({ nextCursor, messageId }) => async () => {
+      const { threadId } = props;
+      const res = await services.fetchMessages({
+        nextCursor,
+        threadId,
+        parentId: messageId,
+        limit: FETCH_REPLIES_LIMIT,
+      });
+      props.fetchMoreRepliesSucceed({ ...res, parentId: messageId });
+    },
+  }),
+  withSendMessage,
+  withHandlers({
+    replyMessage: (props) => (parentId) => ({ message }) => {
+      const { threadId } = props;
+      props.sendMessage({
+        parentId,
+        message,
+        threadId,
+      });
     },
   }),
   lifecycle({
@@ -123,11 +153,13 @@ const enhance = compose(
       fetchMessages,
       fetchMessagesSucceed,
       fetchMoreMessagesSucceed,
+      fetchMoreRepliesSucceed,
       messagesFetcher,
       scrollToBottom,
       threadId,
       nextCursor,
       setNextCursor,
+      sendMessage,
       ...rest
     }) => rest,
   ),

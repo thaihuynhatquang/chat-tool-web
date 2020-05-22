@@ -11,39 +11,36 @@ const MessageWrapper = (story) => <div style={{ width: '60%' }}>{story()}</div>;
 
 storiesOf('Message', module)
   .addDecorator(MessageWrapper)
-  .add('simple', () => <Message message={message} isShowName isShowAvatar />)
+  .add('simple', () => <Message {...message} isShowName isShowAvatar />)
+  .add('long text', () => (
+    <Message
+      {...message}
+      content='This is very very long text... Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text      Llalaa '
+      isShowName
+      isShowAvatar
+    />
+  ))
   .add('with link', () => (
     <Message
-      message={{
-        ...message,
-        content: 'Facebook address: https://www.facebook.com. There    are      spaces    between    word....',
-      }}
+      {...message}
+      content='Facebook address: https://www.facebook.com. There    are      spaces    between    word....'
       isShowName
       isShowAvatar
     />
   ))
   .add('with icon and emoji', () => (
-    <Message
-      message={{
-        ...message,
-        content: 'Smiley face: :) Sad face: :( 😂😍',
-      }}
-      isShowName
-      isShowAvatar
-    />
+    <Message {...message} content='Smiley face: :) Sad face: :( 😂😍' isShowName isShowAvatar />
   ))
   .add('with attachments', () => (
-    <Message message={{ ...message, content: null, additionData: { attachments } }} isShowName isShowAvatar />
+    <Message {...message} content={null} additionData={{ attachments }} isShowName isShowAvatar />
   ))
   .add('with error message', () => (
     <div>
-      <Message message={{ ...message, errorMessage: 'Something went wrong' }} isShowName isShowAvatar />
+      <Message {...message} errorMessage='Something went wrong' isShowName isShowAvatar />
+      <Message {...message} errorMessage='Something went wrong' isVerified isShowName isShowAvatar />
       <Message
-        message={{
-          ...message,
-          isVerified: true,
-          errorMessage: 'Something went wrong',
-        }}
+        {...message}
+        errorMessage="Something went wrong this is very very long long message error this is very very long long message error this is very very long long message error this is very very long long message error this is very very long long message error  this is very very long long message error this is very very long long message error this is very very long long message :'( error       lala"
         isShowName
         isShowAvatar
       />
@@ -51,37 +48,13 @@ storiesOf('Message', module)
   ))
   .add('with pending', () => (
     <div>
-      <Message message={message} sendingStatus={SEND_STATUS_PENDING} isShowName />
-      <Message message={message} sendingStatus={SEND_STATUS_ARRIVED} />
-      <Message message={message} sendingStatus={SEND_STATUS_COMPLETED} isShowAvatar />
+      <Message {...message} message={message} sendingStatus={SEND_STATUS_PENDING} isShowName />
+      <Message {...message} message={message} sendingStatus={SEND_STATUS_ARRIVED} />
+      <Message {...message} message={message} sendingStatus={SEND_STATUS_COMPLETED} isShowAvatar />
 
-      <Message
-        message={{
-          ...message,
-          isVerified: true,
-          mid: 4,
-          sendingStatus: SEND_STATUS_PENDING,
-        }}
-        isShowName
-      />
-      <Message
-        message={{
-          ...message,
-          isVerified: true,
-          mid: 4,
-          sendingStatus: SEND_STATUS_ARRIVED,
-        }}
-        isShowName
-      />
-      <Message
-        message={{
-          ...message,
-          isVerified: true,
-          mid: 4,
-          sendingStatus: SEND_STATUS_COMPLETED,
-        }}
-        isShowName
-      />
+      <Message {...message} isVerified mid={4} sendingStatus={SEND_STATUS_PENDING} isShowName />
+      <Message {...message} isVerified mid={4} sendingStatus={SEND_STATUS_ARRIVED} isShowName />
+      <Message {...message} isVerified mid={4} sendingStatus={SEND_STATUS_COMPLETED} isShowAvatar />
     </div>
   ));
 
@@ -94,12 +67,69 @@ storiesOf('Messages', module)
         { ...message, mid: 4, isVerified: true },
         { ...message, mid: 3 },
         { ...message, mid: 2 },
-        message,
+        { ...message },
       ]}
     />
   ))
   .add('scroll', () => (
-    <div style={{ height: 500 }}>
+    <div style={{ height: 300 }}>
       <Messages messages={messages} />
     </div>
+  ))
+  .add('2LV messages', () => (
+    <Messages
+      messageLevel={2}
+      replyMessage={() => {}}
+      loadMoreReplies={() => {}}
+      messages={[
+        {
+          ...message,
+          mid: 1,
+          replies: {
+            count: 15,
+            nextCursor: 'string',
+            data: [
+              { ...message, mid: 5 },
+              { ...message, mid: 4, isVerified: true },
+            ],
+          },
+        },
+        {
+          ...message,
+          mid: 2,
+          isVerified: true,
+          replies: {
+            count: 30,
+            nextCursor: 'string',
+            data: [
+              { ...message, mid: 5 },
+              {
+                ...message,
+                mid: 4,
+                isVerified: true,
+                sendingStatus: SEND_STATUS_ARRIVED,
+              },
+            ],
+          },
+        },
+        {
+          ...message,
+          mid: 3,
+          isVerified: true,
+          replies: {
+            count: 2,
+            nextCursor: 'string',
+            data: [
+              { ...message, mid: 5 },
+              {
+                ...message,
+                mid: 4,
+                isVerified: true,
+                sendingStatus: SEND_STATUS_PENDING,
+              },
+            ],
+          },
+        },
+      ]}
+    />
   ));

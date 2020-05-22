@@ -1,5 +1,5 @@
 import { FETCH_THREADS_SUCCEED, FETCH_MORE_THREADS_SUCCEED, SELECT_THREAD } from './actions';
-import { unionArray } from 'shared/utils';
+import { unionArray, replaceVietnameseChar } from 'shared/utils';
 import { initStoreState } from 'configs/initState';
 
 export default (state = initStoreState, action) => {
@@ -53,4 +53,52 @@ export default (state = initStoreState, action) => {
     default:
       return state;
   }
+};
+
+// Remove all current threads by filters. Requires update when filters logic changes.
+export const threadsPostReducer = (state = initStoreState) => {
+  const {
+    threads: items,
+    entities: { threads: itemsById },
+    filterThreadsBy: { title, status, isMiss, sort },
+    selectedChannelId: channelId,
+    selectedThreadId,
+  } = state;
+  const filterItems = items
+    .filter((id) => {
+      const thread = itemsById[id];
+      if (!thread) return false;
+      if (thread.channelId !== channelId) return false;
+      if (thread.status !== status) return false;
+      if (
+        title &&
+        !replaceVietnameseChar(thread.title.toLowerCase()).includes(replaceVietnameseChar(title.toLowerCase()))
+      )
+        return false;
+      if (isMiss && thread.missCount === 0) return false;
+      return true;
+    })
+    .sort((aKey, bKey) => {
+      const aItem = itemsById[aKey];
+      const bItem = itemsById[bKey];
+      const compareFunction =
+        !sort || sort === 'desc' ? aItem.updatedAt > bItem.updatedAt : aItem.updatedAt < bItem.updatedAt;
+      return compareFunction ? -1 : 1;
+    });
+  const filterItemsById = filterItems.reduce(
+    (acc, val) => ({ ...acc, [val]: itemsById[val] }),
+    selectedThreadId && filterItems.includes(selectedThreadId)
+      ? {}
+      : // $FlowFixMe
+        { [selectedThreadId]: itemsById[selectedThreadId] },
+  );
+  return {
+    ...state,
+    threads: filterItems,
+    entities: {
+      ...state.entities,
+      threads: filterItemsById,
+    },
+    totalThreadsCount: state.totalThreadsCount - items.length + filterItems.length,
+  };
 };
