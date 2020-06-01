@@ -1,20 +1,20 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-
 import Message from './components/Message';
 import Messages from './components/Messages';
-
 import { message, messages, attachments } from 'storybook/sampleData';
 import { SEND_STATUS_ARRIVED, SEND_STATUS_PENDING, SEND_STATUS_COMPLETED } from './constants';
+import { convertMessageToComponentProps } from './utils';
 
 const MessageWrapper = (story) => <div style={{ width: '60%' }}>{story()}</div>;
 
 storiesOf('Message', module)
   .addDecorator(MessageWrapper)
-  .add('simple', () => <Message {...message} isShowName isShowAvatar />)
+  .add('simple', () => <Message {...convertMessageToComponentProps(message)} isShowName isShowAvatar />)
+  .add('inverse', () => <Message {...convertMessageToComponentProps(message)} isInverse isShowName isShowAvatar />)
   .add('long text', () => (
     <Message
-      {...message}
+      {...convertMessageToComponentProps(message)}
       content='This is very very long text... Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text      Llalaa '
       isShowName
       isShowAvatar
@@ -22,24 +22,47 @@ storiesOf('Message', module)
   ))
   .add('with link', () => (
     <Message
-      {...message}
+      {...convertMessageToComponentProps(message)}
       content='Facebook address: https://www.facebook.com. There    are      spaces    between    word....'
       isShowName
       isShowAvatar
     />
   ))
   .add('with icon and emoji', () => (
-    <Message {...message} content='Smiley face: :) Sad face: :( 😂😍' isShowName isShowAvatar />
+    <Message
+      {...convertMessageToComponentProps(message)}
+      content='Smiley face: :) Sad face: :( 😂😍'
+      isShowName
+      isShowAvatar
+    />
   ))
   .add('with attachments', () => (
-    <Message {...message} content={null} additionData={{ attachments }} isShowName isShowAvatar />
+    <Message
+      {...convertMessageToComponentProps(message)}
+      content={null}
+      attachments={attachments}
+      isShowName
+      isShowAvatar
+    />
   ))
   .add('with error message', () => (
     <div>
-      <Message {...message} errorMessage='Something went wrong' isShowName isShowAvatar />
-      <Message {...message} errorMessage='Something went wrong' isVerified isShowName isShowAvatar />
       <Message
-        {...message}
+        {...convertMessageToComponentProps(message)}
+        errorMessage='Something went wrong'
+        isShowName
+        isShowAvatar
+      />
+      <Message
+        {...convertMessageToComponentProps(message)}
+        errorMessage='Something went wrong'
+        isInverse
+        isVerified
+        isShowName
+        isShowAvatar
+      />
+      <Message
+        {...convertMessageToComponentProps(message)}
         errorMessage="Something went wrong this is very very long long message error this is very very long long message error this is very very long long message error this is very very long long message error this is very very long long message error  this is very very long long message error this is very very long long message error this is very very long long message :'( error       lala"
         isShowName
         isShowAvatar
@@ -48,13 +71,34 @@ storiesOf('Message', module)
   ))
   .add('with pending', () => (
     <div>
-      <Message {...message} message={message} sendingStatus={SEND_STATUS_PENDING} isShowName />
-      <Message {...message} message={message} sendingStatus={SEND_STATUS_ARRIVED} />
-      <Message {...message} message={message} sendingStatus={SEND_STATUS_COMPLETED} isShowAvatar />
+      <Message {...convertMessageToComponentProps(message)} sendingStatus={SEND_STATUS_PENDING} isShowName />
+      <Message {...convertMessageToComponentProps(message)} sendingStatus={SEND_STATUS_ARRIVED} />
+      <Message {...convertMessageToComponentProps(message)} sendingStatus={SEND_STATUS_COMPLETED} isShowAvatar />
 
-      <Message {...message} isVerified mid={4} sendingStatus={SEND_STATUS_PENDING} isShowName />
-      <Message {...message} isVerified mid={4} sendingStatus={SEND_STATUS_ARRIVED} isShowName />
-      <Message {...message} isVerified mid={4} sendingStatus={SEND_STATUS_COMPLETED} isShowAvatar />
+      <Message
+        {...convertMessageToComponentProps(message)}
+        isVerified
+        isInverse
+        mid={4}
+        sendingStatus={SEND_STATUS_PENDING}
+        isShowName
+      />
+      <Message
+        {...convertMessageToComponentProps(message)}
+        isVerified
+        isInverse
+        mid={4}
+        sendingStatus={SEND_STATUS_ARRIVED}
+        isShowName
+      />
+      <Message
+        {...convertMessageToComponentProps(message)}
+        isVerified
+        isInverse
+        mid={4}
+        sendingStatus={SEND_STATUS_COMPLETED}
+        isShowAvatar
+      />
     </div>
   ));
 

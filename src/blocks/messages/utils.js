@@ -24,3 +24,18 @@ export const formatMessage = (string) => {
     })
   );
 };
+
+export const convertMessageToComponentProps = (message) => {
+  const { mid, content, customer, user, isVerified, sendingStatus, errorMessage } = message;
+  const owner = user || customer;
+  const ownerAvatarUrl = user ? owner.avatarUrl : owner.additionData && owner.additionData.avatarUrl;
+  return {
+    mid,
+    content,
+    isVerified,
+    name: owner.name,
+    avatarUrl: ownerAvatarUrl,
+    sendingStatus,
+    errorMessage,
+  };
+};

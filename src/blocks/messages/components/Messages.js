@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
+import { pure } from 'recompose';
 import Message from './Message';
 import SendBox from 'blocks/messagesSendBox/components/SendBox';
 import { visualTime } from 'shared/utils';
-import { pure } from 'recompose';
+import { convertMessageToComponentProps } from '../utils';
 
 const Messages = (props) => {
   const { mountRef, messages, messageLevel = 1, readAt, loadMoreReplies, replyMessage } = props;
@@ -14,7 +15,7 @@ const Messages = (props) => {
           const { replies } = message;
           return (
             <Fragment key={message.mid}>
-              <Message {...message} messageLevel={2} isShowName isShowAvatar />
+              <Message {...convertMessageToComponentProps(message)} isShowName isShowAvatar />
               <div className='ml-5'>
                 {replies && (
                   <Fragment>
@@ -31,7 +32,7 @@ const Messages = (props) => {
                       </div>
                     )}
                     {[...replies.data].reverse().map((reply) => (
-                      <Message key={reply.mid} {...reply} messageLevel={2} isShowName isShowAvatar />
+                      <Message key={reply.mid} {...convertMessageToComponentProps(reply)} isShowName isShowAvatar />
                     ))}
                   </Fragment>
                 )}
@@ -45,7 +46,8 @@ const Messages = (props) => {
         return (
           <Message
             key={message.mid}
-            {...message}
+            {...convertMessageToComponentProps(message)}
+            isInverse={message.isVerified}
             isShowName={index === 0 || !!message.isVerified !== !!array[index - 1].isVerified}
             isShowAvatar={index === array.length - 1 || !!message.isVerified !== !!array[index + 1].isVerified}
           />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 import { Row, Col } from 'reactstrap';
 import { formatMessage, getFilenameFromUrl } from '../utils';
 
@@ -50,4 +51,4 @@ const Attachments = (props) => {
   );
 };
 
-export default Attachments;
+export default pure(Attachments);
