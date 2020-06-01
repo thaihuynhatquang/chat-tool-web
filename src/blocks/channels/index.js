@@ -1,6 +1,6 @@
-import { compose, withHandlers } from 'recompose';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { compose, mapProps, withHandlers } from 'recompose';
 import { withFetcher, withLoading } from 'shared/hooks';
 import { fetchChannelsSucceed, selectChannel } from './actions';
 import { fetchChannels } from './services';
@@ -15,21 +15,14 @@ const mapState = (state) => {
   };
 };
 
-const mapDispatch = (dispatch) => {
-  return bindActionCreators(
+const mapDispatch = (dispatch) =>
+  bindActionCreators(
     {
       fetchChannelsSucceed,
       selectChannel,
     },
     dispatch,
   );
-};
-
-const withSelectChannel = withHandlers({
-  onSelectChannel: (props) => (id) => () => {
-    props.selectChannel(id);
-  },
-});
 
 const enhance = compose(
   connect(mapState, mapDispatch),
@@ -44,8 +37,13 @@ const enhance = compose(
       fetchOnMount: true,
     },
   ),
-  withLoading((props) => props.channelsFetcher.isLoading && props.channelsFetcher.data === null, { size: 3 }),
-  withSelectChannel,
+  withLoading((props) => props.channelsFetcher.isLoading && props.channelsFetcher.data === null),
+  withHandlers({
+    onSelectChannel: (props) => (id) => () => {
+      props.selectChannel(id);
+    },
+  }),
+  mapProps(({ channelsFetcher, fetchChannelsSucceed, selectChannel, ...rest }) => rest),
 );
 
 export default enhance(Channels);

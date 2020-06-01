@@ -35,3 +35,5 @@ export const replaceVietnameseChar = (str) => {
   str = str.replace(/Đ/g, 'D');
   return str;
 };
+
+export const isDevelopment = process.env.NODE_ENV === 'development';

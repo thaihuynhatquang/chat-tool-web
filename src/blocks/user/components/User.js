@@ -1,5 +1,6 @@
 import React from 'react';
 import { pure } from 'recompose';
+import { withToggle } from 'shared/hooks';
 import { DEFAULT_AVATAR_URL } from 'common/constants';
 
 const listGroupClass = 'list-group-item pl-3 pr-0 py-1 select-none';
@@ -7,16 +8,16 @@ const listGroupClass = 'list-group-item pl-3 pr-0 py-1 select-none';
 const User = (props) => {
   const {
     user: { avatarUrl = DEFAULT_AVATAR_URL, name },
-    isShowNav = false,
-    toggleNav,
+    togglePanel,
+    isPanelShow,
     logout,
   } = props;
   return (
     <div className='p-2 mb-2 position-relative'>
-      <div className='cursor-pointer' onContextMenu={toggleNav}>
+      <div className='cursor-pointer' onContextMenu={togglePanel}>
         <img src={avatarUrl} alt={name} className='rounded-circle mw-100 border' />
       </div>
-      {isShowNav && (
+      {isPanelShow && (
         <ul
           className='list-group text-left position-absolute'
           style={{
@@ -24,8 +25,7 @@ const User = (props) => {
             left: '4.3rem',
             minWidth: 180,
             zIndex: 1,
-          }}
-          onBlur={() => console.log('Blur')}>
+          }}>
           <li className={`${listGroupClass} text-primary`}>
             <small>Xin chào, {name}!</small>
           </li>
@@ -44,4 +44,4 @@ const User = (props) => {
   );
 };
 
-export default pure(User);
+export default withToggle('panel')(pure(User));

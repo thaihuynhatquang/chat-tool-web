@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import Channels from 'blocks/channels';
 import ThreadHeader from 'blocks/threadsHeader';
@@ -10,19 +11,25 @@ import ThreadInfo from 'blocks/threadsInfo';
 import CustomerInfo from 'blocks/customersInfo';
 import User from 'blocks/user';
 
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { compose, branch, mapProps, renderNothing } from 'recompose';
 import { fetchCurrentUserSucceed } from './actions';
 import * as services from './services';
 import * as storeGetter from 'shared/getEntities';
-import { branch, mapProps, renderNothing, compose } from 'recompose';
+import { isDevelopment } from 'shared/utils';
 import { withFetcher } from 'shared/hooks';
 
 const App = () => (
-  <div className='position-absolute d-flex ' style={{ left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden' }}>
+  <div
+    className='position-absolute d-flex'
+    onContextMenu={!isDevelopment ? (e) => e.preventDefault() : undefined}
+    style={{ left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden' }}>
     <div className='flex-grow-0 flex-shrink-0' style={{ width: 70 }}>
-      <div className='d-flex flex-column justify-content-between border-right text-center h-100 '>
-        <Channels />
+      <div className='d-flex flex-column justify-content-between border-right text-center h-100'>
+        <div>
+          <Channels />
+        </div>
         <User />
       </div>
     </div>
@@ -73,7 +80,7 @@ const enhance = compose(
     { fetchOnMount: true },
   ),
   branch((props) => !props.user, renderNothing),
-  mapProps(({ user, fetchCurrentUserSucceed, userFetcher, ...rest }) => rest),
+  mapProps(({ user, userFetcher, fetchCurrentUserSucceed, ...rest }) => rest),
 );
 
 export default enhance(App);

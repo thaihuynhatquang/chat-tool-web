@@ -25,7 +25,7 @@ rootElement &&
     isSignedIn ? (
       <Provider store={configureStore()}>
         <Fragment>
-          <ErrorBoundary onError={(error, info) => toast.error('Có gì đó sai sai:', error.message)}>
+          <ErrorBoundary onError={(error, info) => toast.error(<small>Có gì đó sai sai: {error.message}</small>)}>
             <App />
           </ErrorBoundary>
           <ToastContainer

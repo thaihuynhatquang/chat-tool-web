@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Channel from './Channel';
 
 const Channels = (props) => {
   const { channels, selectedChannelId, onSelectChannel } = props;
   return (
-    <div>
+    <Fragment>
       {channels.map((channel) => (
         <Channel
           key={channel.id}
-          channel={channel}
+          id={channel.id}
+          title={channel.title}
+          avatarUrl={channel.additionData && channel.additionData.avatarUrl}
+          missCount={channel.missCount}
           isSelected={channel.id === selectedChannelId}
-          onSelectChannel={onSelectChannel}
+          onSelect={onSelectChannel}
         />
       ))}
-    </div>
+    </Fragment>
   );
 };
 
