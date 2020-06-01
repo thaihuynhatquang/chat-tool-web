@@ -37,3 +37,8 @@
 .font-size-sm {
   font-size: 80%;
 }
+
+.toastify-progress-custom {
+  height: 1px!important;
+  background: #6c757d!important;
+}

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import 'configs/axios';
 import configureStore from 'configs/store';
 import 'styles';
 import App from 'blocks/app';
+import ErrorBoundary from 'shared/components/ErrorBoundary';
+import { ToastContainer, toast } from 'react-toastify';
 import * as serviceWorker from 'serviceWorker';
 import { isSignedIn } from 'configs/axios';
 import { GoogleLogin } from 'react-google-login';
@@ -22,7 +24,17 @@ rootElement &&
   ReactDOM.render(
     isSignedIn ? (
       <Provider store={configureStore()}>
-        <App />
+        <Fragment>
+          <ErrorBoundary onError={(error, info) => toast.error('Có gì đó sai sai:', error.message)}>
+            <App />
+          </ErrorBoundary>
+          <ToastContainer
+            autoClose={7000}
+            newestOnTop={true}
+            closeButton={false}
+            progressClassName='toastify-progress-custom'
+          />
+        </Fragment>
       </Provider>
     ) : (
       <GoogleLogin
