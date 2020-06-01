@@ -36,8 +36,8 @@ const Messages = (props) => {
                     ))}
                   </Fragment>
                 )}
-                <div className='mx-5 mt-3 mb-2 border border-secondary round-input'>
-                  <SendBox height={35} size='sm' sendMessage={replyMessage(message.mid)} />
+                <div className='mx-5 mt-3 mb-2 border border-secondary round-input' style={{ height: 40 }}>
+                  <SendBox size='sm' sendMessage={replyMessage(message.mid)} />
                 </div>
               </div>
             </Fragment>

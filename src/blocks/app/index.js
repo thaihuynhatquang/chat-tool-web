@@ -48,7 +48,7 @@ const App = () => (
       <div className='d-flex h-100 justify-content-between flex-column border-left'>
         <MessagesHeader />
         <Messages />
-        <span className='border-top'>
+        <span className='border-top' style={{ height: 80 }}>
           <MessagesSendBox />
         </span>
       </div>

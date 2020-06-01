@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 
@@ -9,6 +10,17 @@ const defaultProps = {
 };
 
 storiesOf('MessageSendBox', module)
-  .addDecorator((story) => <div style={{ width: '60%', marginTop: 500, border: '1px solid grey' }}>{story()}</div>)
+  .addDecorator((story) => (
+    <div
+      style={{
+        width: '60%',
+        marginTop: 500,
+        border: '1px solid grey',
+        height: 80,
+      }}>
+      {story()}
+    </div>
+  ))
   .add('simple', () => <SendBox {...defaultProps} />)
-  .add('disabled', () => <SendBox {...defaultProps} disabled />);
+  .add('disabled', () => <SendBox {...defaultProps} disabled />)
+  .add('small size', () => <SendBox {...defaultProps} size='sm' />);

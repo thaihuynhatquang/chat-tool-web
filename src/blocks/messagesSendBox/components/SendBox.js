@@ -4,11 +4,8 @@ import classNames from 'classnames';
 import messengerIcons from 'emoji-mart/data/messenger.json';
 import { NimblePicker } from 'emoji-mart';
 
-const sharedIconClass = 'fa-lg px-2 align-bottom text-secondary';
-
 const SendBox = (props) => {
   const {
-    height = 80,
     size = 'md',
     disabled = false,
     isShowEmoji,
@@ -20,6 +17,7 @@ const SendBox = (props) => {
     resetSendBox,
   } = props;
 
+  const sharedIconClass = `fa-lg px-2 align-bottom text-secondary ${size === 'sm' ? 'font-size-sm' : ''}`;
   const sendAndResetBox = () => {
     sendMessage({ message });
     resetSendBox();
@@ -29,7 +27,7 @@ const SendBox = (props) => {
   };
 
   return (
-    <div style={{ height }} className='d-flex justify-content-between align-items-center'>
+    <div className='d-flex justify-content-between align-items-center h-100'>
       {disabled ? (
         <div className='text-secondary text-center w-100 cursor-disabled'>
           Không thể gửi tin nhắn trong cuộc hội thoại này

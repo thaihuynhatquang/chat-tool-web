@@ -25,10 +25,11 @@ export const formatMessage = (string) => {
   );
 };
 
+// TODO: Use correct type of message
 export const convertMessageToComponentProps = (message) => {
   const { mid, content, customer, user, isVerified, sendingStatus, errorMessage } = message;
-  const owner = user || customer;
-  const ownerAvatarUrl = user ? owner.avatarUrl : owner.additionData && owner.additionData.avatarUrl;
+  const owner = user ? user : customer;
+  const ownerAvatarUrl = user ? user.avatarUrl : customer.additionData && customer.additionData.avatarUrl;
   return {
     mid,
     content,
