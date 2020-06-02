@@ -2,10 +2,15 @@ import React from 'react';
 import { pure } from 'recompose';
 import { Row, Col } from 'reactstrap';
 import { formatMessage, getFilenameFromUrl } from '../utils';
+import PreviewImage from 'shared/components/PreviewImage';
 
 const Attachments = (props) => {
   const { attachments } = props;
-  const images = attachments.filter((att) => att.type === 'image');
+  const images = attachments
+    .filter((att) => att.type === 'image')
+    .map((image) => ({
+      src: image.payload.url,
+    }));
   const files = attachments.filter((att) => att.type === 'file');
   const videos = attachments.filter((att) => att.type === 'video');
   const audios = attachments.filter((att) => att.type === 'audio');
@@ -19,7 +24,12 @@ const Attachments = (props) => {
         <Row noGutters>
           {images.map((image, index) => (
             <Col key={index} xs={imageColSize}>
-              <img className='rounded p-1 img-fluid round-circle' src={image.payload.url} alt={image.payload.url} />
+              <PreviewImage
+                className='rounded p-1 img-fluid round-circle'
+                src={image.src}
+                alt={image.src}
+                images={images}
+              />
             </Col>
           ))}
         </Row>

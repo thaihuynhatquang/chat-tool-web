@@ -66,13 +66,19 @@ export default PreviewImage((newprops) => {
     thumbnails,
     src,
     indexImage,
+    className,
     ...rest
   } = newprops;
 
   return (
     <Fragment>
-      {/* eslint-disable-next-line jsx-a11y/alt-text */}
-      <img src={src} onClick={() => openLightbox(indexImage)} {...rest} />
+      <img
+        className={`${className || ''} cursor-pointer`}
+        src={src}
+        onClick={() => openLightbox(indexImage)}
+        {...rest}
+        alt={src}
+      />
       <Lightbox
         currentImage={currentImage}
         images={thumbnails}
@@ -82,6 +88,8 @@ export default PreviewImage((newprops) => {
         onClickThumbnail={gotoImage}
         onClose={closeLightbox}
         showThumbnails={thumbnails.length > 1}
+        showCloseButton={false}
+        backdropClosesModal
       />
     </Fragment>
   );

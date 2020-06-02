@@ -27,7 +27,7 @@ export const formatMessage = (string) => {
 
 // TODO: Use correct type of message
 export const convertMessageToComponentProps = (message) => {
-  const { mid, content, customer, user, isVerified, sendingStatus, errorMessage } = message;
+  const { mid, content, customer, user, isVerified, sendingStatus, errorMessage, additionData, msgCreatedAt } = message;
   const owner = user ? user : customer;
   const ownerAvatarUrl = user ? user.avatarUrl : customer.additionData && customer.additionData.avatarUrl;
   return {
@@ -36,7 +36,9 @@ export const convertMessageToComponentProps = (message) => {
     isVerified,
     name: owner.name,
     avatarUrl: ownerAvatarUrl,
+    attachments: additionData && additionData.attachments,
     sendingStatus,
     errorMessage,
+    msgCreatedAt,
   };
 };

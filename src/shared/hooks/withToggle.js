@@ -1,13 +1,13 @@
 import { compose, withStateHandlers } from 'recompose';
 import { upperFirst } from 'shared/utils';
 
-const withToggle = (toggleName) => {
+const withToggle = (toggleName, toggleByDefault = false) => {
   const capitalizeName = upperFirst(toggleName);
   const stateName = `is${capitalizeName}Show`;
   return compose(
     withStateHandlers(
       {
-        [stateName]: false,
+        [stateName]: toggleByDefault,
       },
       {
         [`show${capitalizeName}`]: () => (e) => {

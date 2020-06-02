@@ -28,8 +28,8 @@ const DEFAULT_LOCAL_FILTER = {
   isMiss: false,
 };
 
-const AdvanceThreadSearch = (props) => {
-  const { onSearch, toggleSearchMode, onChangeFilter, localFilterBy } = props;
+const Advance = (props) => {
+  const { onSearch, toggleSearchMode, onChangeFilter, localFilterBy = DEFAULT_LOCAL_FILTER } = props;
   const {
     title = DEFAULT_LOCAL_FILTER.title,
     status = DEFAULT_LOCAL_FILTER.status,
@@ -122,4 +122,4 @@ const AdvanceThreadSearch = (props) => {
   );
 };
 
-export default AdvanceThreadSearch;
+export default Advance;

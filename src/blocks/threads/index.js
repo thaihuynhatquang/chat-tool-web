@@ -94,9 +94,11 @@ const enhance = compose(
     (props) => !!props.nextCursor && props.threads.length !== props.totalCount,
     async (props) => {
       const {
+        selectedChannelId,
         filterBy: { sort, ...otherFilter },
       } = props;
       const input = {
+        channelId: selectedChannelId,
         limit: props.limit,
         ...otherFilter,
         ...(sort && {

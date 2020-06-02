@@ -9,7 +9,6 @@ export const channel = {
       'https://scontent.fhan7-1.fna.fbcdn.net/v/t31.0-8/p960x960/14708071_1698871510432437_7066549912353019610_o.jpg?_nc_cat=108&_nc_sid=09cbfe&_nc_ohc=cYjL4cfY2vMAX8mHxgr&_nc_ht=scontent.fhan7-1.fna&_nc_tp=6&oh=4d6b3c96e95df8cdd608e1501ca85f76&oe=5EC72696',
     facebookUrl: 'https://www.facebook.com/sgcfs',
   },
-  missCount: 12,
 };
 
 export const channels = [
@@ -196,4 +195,37 @@ export const messages = [
   { ...message, mid: 3 },
   { ...message, mid: 2 },
   message,
+];
+
+export const DEFAULT_IMAGES = [
+  {
+    id: '1470619549108-b85c56fe5be8',
+    caption: 'Photo by Alan Emery',
+    orientation: 'square',
+    useForDemo: true,
+  }, // https://unsplash.com/photos/SYzUF6XcWBY (Flamingo)
+  {
+    id: '1471079502516-250c19af6928',
+    caption: 'Photo by Jeremy Bishop',
+    orientation: 'landscape',
+    useForDemo: true,
+  }, // https://unsplash.com/photos/GIpGxe2_cT4 (Turtle)
+  {
+    id: '1454023492550-5696f8ff10e1',
+    caption: 'Photo by Jessica Weiller',
+    orientation: 'landscape',
+    useForDemo: true,
+  }, // https://unsplash.com/photos/LmVSKeDy6EA (Tiger)
+  {
+    id: '1470854989922-5be2f7456d78',
+    caption: 'Photo by Piotr Łaskawski',
+    orientation: 'landscape',
+    useForDemo: true,
+  }, // https://unsplash.com/photos/GXMr7BadXQo (Hedgehog)
+  {
+    id: '1470317596697-cbdeda56f999',
+    caption: 'Photo by Michel Bosma',
+    orientation: 'landscape',
+    useForDemo: true,
+  }, // https://unsplash.com/photos/XgF9e93Tkt0 (Ladybug)
 ];

@@ -22,7 +22,7 @@ const mapState = (state) => {
   const formattedPendingMessages = pendingMessages
     .filter((item) => thread && item.threadId === thread.id)
     .map((item) => {
-      const { identifier, threadId, parentId, message, messageId, errorMessage } = item;
+      const { identifier, threadId, parentId, message, attachment, messageId, errorMessage } = item;
       const createdAt = moment(identifier, 'x');
       return {
         mid: identifier,
@@ -30,6 +30,18 @@ const mapState = (state) => {
         parentId,
         customer: null,
         content: message,
+        additionData: attachment
+          ? {
+              attachments: [
+                {
+                  type: 'image',
+                  payload: {
+                    url: URL.createObjectURL(attachment),
+                  },
+                },
+              ],
+            }
+          : null,
         sendingStatus: !messageId ? SEND_STATUS_PENDING : SEND_STATUS_ARRIVED,
         isVerified: true,
         user,
@@ -107,14 +119,8 @@ const enhance = compose(
   }),
   withSendMessage,
   withHandlers({
-    replyMessage: (props) => (parentId) => ({ message }) => {
-      const { threadId } = props;
-      props.sendMessage({
-        parentId,
-        message,
-        threadId,
-      });
-    },
+    sendMessage: (props) => props._sendMessage(),
+    replyMessage: (props) => (parentId) => props._sendMessage(parentId),
   }),
   lifecycle({
     componentDidMount() {
@@ -159,7 +165,7 @@ const enhance = compose(
       threadId,
       nextCursor,
       setNextCursor,
-      sendMessage,
+      _sendMessage,
       ...rest
     }) => rest,
   ),

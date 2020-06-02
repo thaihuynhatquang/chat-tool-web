@@ -2,7 +2,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { branch, mapProps, renderNothing, withHandlers, withProps, compose } from 'recompose';
 import { THREAD_STATUS_DONE } from 'common/constants';
-import { MESSAGE_TYPE_TEXT, MESSAGE_TYPE_FILE } from './constants';
 import SendBox from './components/SendBox';
 import * as actions from './actions';
 import * as services from './services';
@@ -24,26 +23,25 @@ const mapDispatch = (dispatch) => ({
 export const withSendMessage = compose(
   connect(null, mapDispatch),
   withHandlers({
-    sendMessage: (props) => async ({
-      threadId = props.threadId,
-      parentId = props.parentId,
-      message = props.message,
-    }) => {
+    _sendMessage: (props) => (parentId) => async ({ message, attachment }) => {
+      const { threadId } = props;
+      if (!threadId) throw new Error('Send message without threadId');
       const identifier = moment().format('x');
       const { actions } = props;
-      if (!message) return;
+      if (!message && !attachment) return;
       try {
         actions.sendMessage({
           identifier,
           threadId,
-          message,
-          messageType: message ? MESSAGE_TYPE_TEXT : MESSAGE_TYPE_FILE,
           parentId,
+          message,
+          attachment,
         });
         const { response } = await services.sendMessage({
           threadId,
-          message,
           parentId,
+          message,
+          attachment,
         });
         actions.sendMessageSucceed({
           identifier,
@@ -52,7 +50,7 @@ export const withSendMessage = compose(
       } catch (err) {
         actions.sendMessageFailed({
           identifier,
-          errorMessage: err.response ? err.response.data.response.message : err.message,
+          errorMessage: typeof err.response.data === 'string' ? err.message : err.response.data.response.message,
         });
       }
     },
@@ -67,7 +65,10 @@ const enhance = compose(
     disabled: props.threadStatus === THREAD_STATUS_DONE,
   })),
   withSendMessage,
-  mapProps(({ actions, threadId, threadStatus, ...rest }) => rest),
+  withHandlers({
+    sendMessage: (props) => props._sendMessage(),
+  }),
+  mapProps(({ actions, threadId, threadStatus, _sendMessage, ...rest }) => rest),
 );
 
 export default enhance(SendBox);

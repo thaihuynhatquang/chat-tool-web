@@ -1,2 +1,1 @@
-export const MESSAGE_TYPE_TEXT = 'text';
-export const MESSAGE_TYPE_FILE = 'file';
+export const PREVIEW_ATTACHMENT_SIZE = 80;

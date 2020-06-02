@@ -22,7 +22,7 @@ import { withFetcher } from 'shared/hooks';
 
 const App = () => (
   <div
-    className='position-absolute d-flex'
+    className='position-fixed d-flex'
     onContextMenu={!isDevelopment ? (e) => e.preventDefault() : undefined}
     style={{ left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden' }}>
     <div className='flex-grow-0 flex-shrink-0' style={{ width: 70 }}>
@@ -48,7 +48,7 @@ const App = () => (
       <div className='d-flex h-100 justify-content-between flex-column border-left'>
         <MessagesHeader />
         <Messages />
-        <span className='border-top' style={{ height: 80 }}>
+        <span className='border-top'>
           <MessagesSendBox />
         </span>
       </div>

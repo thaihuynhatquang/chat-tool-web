@@ -65,7 +65,7 @@ const Message = (props) => {
               },
             )}
             title={visualTime(msgCreatedAt)}>
-            {formatMessage(content)}
+            {formatMessage(content || '')}
             {attachments && <Attachments attachments={attachments} />}
             {sendingStatus && (
               <small

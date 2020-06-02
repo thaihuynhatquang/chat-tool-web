@@ -12,11 +12,10 @@ export const upperFirst = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export const unionArray = (arrArg) => {
-  return arrArg.filter((elem, pos, arr) => {
+export const unionArray = (arrArg) =>
+  arrArg.filter((elem, pos, arr) => {
     return arr.indexOf(elem) === pos;
   });
-};
 
 export const replaceVietnameseChar = (str) => {
   str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');

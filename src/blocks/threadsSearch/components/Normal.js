@@ -2,8 +2,8 @@ import React from 'react';
 import { Input } from 'reactstrap';
 import { pure } from 'recompose';
 
-export const Search = (props) => {
-  const { onChangeSearchText, onSearch, toggleSearchMode, initSearchText } = props;
+export const NormalMode = (props) => {
+  const { initSearchText, onChangeSearchText, onKeyDownSearch, toggleSearchMode } = props;
   return (
     <div className='search-input'>
       <i className='fas fa-search' />
@@ -15,7 +15,7 @@ export const Search = (props) => {
         autoComplete='off'
         defaultValue={initSearchText}
         onChange={onChangeSearchText}
-        onKeyUp={onSearch}
+        onKeyDown={onKeyDownSearch}
       />
       <div className='d-flex justify-content-end'>
         <button className='btn btn-sm btn-link px-1 py-0' onClick={toggleSearchMode}>
@@ -26,4 +26,4 @@ export const Search = (props) => {
   );
 };
 
-export default pure(Search);
+export default pure(NormalMode);

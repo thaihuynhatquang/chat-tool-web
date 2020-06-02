@@ -1,9 +1,19 @@
-import ThreadSearchNormal from './components/Normal';
-import ThreadSearchAdvance from './components/Advance';
-import { compose, branch, mapProps, renderComponent, withState, withStateHandlers, withHandlers } from 'recompose';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import {
+  compose,
+  branch,
+  mapProps,
+  renderComponent,
+  renderNothing,
+  withState,
+  withStateHandlers,
+  withHandlers,
+} from 'recompose';
+import { withToggle } from 'shared/hooks';
 import { changeFilterBy } from './actions';
+import ThreadSearchNormal from './components/Normal';
+import ThreadSearchAdvance from './components/Advance';
 
 const enhanceNormalMode = compose(
   connect(
@@ -17,7 +27,7 @@ const enhanceNormalMode = compose(
     onChangeSearchText: (props) => (e) => {
       props.setSearchText(e.target.value.trim());
     },
-    onSearch: (props) => (e) => {
+    onKeyDownSearch: (props) => (e) => {
       if (e.key === 'Enter') {
         props.changeFilterBy({ title: props.searchText });
       }
@@ -54,26 +64,17 @@ const enhanceAdvanceMode = compose(
   mapProps(({ filterBy, changeFilterBy, ...rest }) => rest),
 );
 
-const mapToggleSearchModeProps = mapProps(({ toggleSearchMode }) => ({
-  toggleSearchMode,
+const mapToggleSearchModeProps = mapProps(({ toggleNormalMode }) => ({
+  toggleSearchMode: toggleNormalMode,
 }));
 
 const enhance = compose(
-  withStateHandlers(
-    {
-      searchMode: 'normal',
-    },
-    {
-      toggleSearchMode: ({ searchMode }) => () => ({
-        searchMode: searchMode === 'normal' ? 'advance' : 'normal',
-      }),
-    },
-  ),
+  withToggle('normalMode', true),
   branch(
-    (props) => props.searchMode === 'normal',
+    (props) => props.isNormalModeShow,
     renderComponent(compose(mapToggleSearchModeProps, enhanceNormalMode)(ThreadSearchNormal)),
     renderComponent(compose(mapToggleSearchModeProps, enhanceAdvanceMode)(ThreadSearchAdvance)),
   ),
 );
 
-export default enhance(() => null);
+export default enhance(renderNothing);

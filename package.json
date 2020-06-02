@@ -47,6 +47,8 @@
     "@storybook/react": "5.3.18",
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
-    "babel-plugin-require-context-hook": "^1.0.0"
+    "prettier": "^1.14.3",
+    "react-test-renderer": "^16.7.0",
+    "require-context.macro": "^1.0.4"
   }
 }

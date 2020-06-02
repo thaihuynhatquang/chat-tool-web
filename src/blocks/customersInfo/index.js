@@ -2,6 +2,7 @@ import React from 'react';
 import Customer from './customer';
 import Notes from './notes';
 import Tags from './tags';
+import Images from './images';
 
 const CustomersInfo = (props) => {
   return (
@@ -9,6 +10,7 @@ const CustomersInfo = (props) => {
       <Customer />
       <Tags />
       <Notes />
+      <Images />
     </div>
   );
 };

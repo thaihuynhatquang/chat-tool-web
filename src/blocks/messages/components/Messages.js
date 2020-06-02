@@ -3,6 +3,7 @@ import { pure } from 'recompose';
 import Message from './Message';
 import SendBox from 'blocks/messagesSendBox/components/SendBox';
 import { visualTime } from 'shared/utils';
+import { SEND_STATUS_COMPLETED } from '../constants';
 import { convertMessageToComponentProps } from '../utils';
 
 const Messages = (props) => {
@@ -36,9 +37,11 @@ const Messages = (props) => {
                     ))}
                   </Fragment>
                 )}
-                <div className='mx-5 mt-3 mb-2 border border-secondary round-input' style={{ height: 40 }}>
-                  <SendBox size='sm' sendMessage={replyMessage(message.mid)} />
-                </div>
+                {(!message.sendingStatus || message.sendingStatus === SEND_STATUS_COMPLETED) && (
+                  <div className='mx-5 mt-3 mb-2 border border-secondary round-input'>
+                    <SendBox size='sm' height={40} sendMessage={replyMessage(message.mid)} />
+                  </div>
+                )}
               </div>
             </Fragment>
           );
@@ -48,8 +51,20 @@ const Messages = (props) => {
             key={message.mid}
             {...convertMessageToComponentProps(message)}
             isInverse={message.isVerified}
-            isShowName={index === 0 || !!message.isVerified !== !!array[index - 1].isVerified}
-            isShowAvatar={index === array.length - 1 || !!message.isVerified !== !!array[index + 1].isVerified}
+            isShowName={
+              index === 0 ||
+              !!message.isVerified !== !!array[index - 1].isVerified ||
+              (!!message.isVerified === true &&
+                !!array[index - 1].isVerified === true &&
+                message.userId !== array[index - 1].userId)
+            }
+            isShowAvatar={
+              index === array.length - 1 ||
+              !!message.isVerified !== !!array[index + 1].isVerified ||
+              (!!message.isVerified === true &&
+                !!array[index + 1].isVerified === true &&
+                message.userId !== array[index + 1].userId)
+            }
           />
         );
       })}

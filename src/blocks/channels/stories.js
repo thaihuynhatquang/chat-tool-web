@@ -25,4 +25,6 @@ storiesOf('Channel', module)
 
 storiesOf('Channels', module)
   .addDecorator(StoryWrapper)
-  .add('simple', () => <Channels {...channels} onSelect={onSelectChannel} selectedChannelId={channels[0].id} />);
+  .add('simple', () => (
+    <Channels channels={channels} onSelectChannel={onSelectChannel} selectedChannelId={channels[0].id} />
+  ));
