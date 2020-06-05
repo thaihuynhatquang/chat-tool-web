@@ -1,8 +1,8 @@
 import React from 'react';
 import Customer from './customer';
+import Images from './images';
 import Notes from './notes';
 import Tags from './tags';
-import Images from './images';
 
 const CustomersInfo = (props) => {
   return (

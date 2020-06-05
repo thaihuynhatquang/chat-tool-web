@@ -1,11 +1,11 @@
-import Customer from './components/Customer';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { branch, mapProps, renderNothing, withHandlers, compose } from 'recompose';
-import { withFetcher, withLoading } from 'shared/hooks';
-import * as actions from './actions';
-import * as services from './services';
+import { branch, compose, mapProps, renderNothing, withHandlers } from 'recompose';
+import { bindActionCreators } from 'redux';
 import * as storeGetter from 'shared/getEntities';
+import { withEmpty, withFetcher, withLoading } from 'shared/hooks';
+import * as actions from './actions';
+import Customer from './components/Customer';
+import * as services from './services';
 
 const mapState = (state) => {
   const { totalCustomersCount } = state;
@@ -30,6 +30,7 @@ const enhance = compose(
       const servicesResponse = await services.fetchCustomersByThreadId({
         threadId,
       });
+
       fetchCustomersSucceed(servicesResponse);
       return servicesResponse;
     },
@@ -38,9 +39,10 @@ const enhance = compose(
       fetchOnPropsChange: ['threadId'],
     },
   ),
-  withLoading((props) => props.customersFetcher.isLoading || !props.customer, {
+  withLoading((props) => props.customersFetcher.isLoading, {
     size: 2,
   }),
+  withEmpty((props) => !props.customer),
   withHandlers({
     searchCustomers: (props) => async (searchValue, callback) => {
       const { threadId } = props;

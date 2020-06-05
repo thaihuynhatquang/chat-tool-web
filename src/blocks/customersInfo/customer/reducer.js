@@ -1,5 +1,5 @@
-import { FETCH_CUSTOMERS_IN_THREAD_SUCCEED, SELECT_CUSTOMER } from './actions';
 import { initStoreState } from 'configs/initState';
+import { FETCH_CUSTOMERS_IN_THREAD_SUCCEED, SELECT_CUSTOMER } from './actions';
 
 export default (state = initStoreState, action) => {
   switch (action.type) {

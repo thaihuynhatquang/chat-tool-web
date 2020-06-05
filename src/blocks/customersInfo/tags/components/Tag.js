@@ -1,13 +1,14 @@
 import React from 'react';
 
 const Tag = (props) => {
-  const { tag, removeTag } = props;
+  const { tag, removeTag, onClickTag } = props;
+
   return (
-    <small>
+    <small onClick={onClickTag}>
       <span style={{ fontSize: '90%' }}>
         <span className='py-1 px-1 mr-2 rounded text-white' style={{ backgroundColor: tag.color }}>
           {tag.content}
-          <i className='cursor-pointer fas fa-times pl-2' onClick={removeTag(tag.id)} />
+          {removeTag && <i className='cursor-pointer fas fa-times pl-2' onClick={removeTag(tag.id)} />}
         </span>
       </span>
     </small>

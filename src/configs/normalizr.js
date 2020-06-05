@@ -13,3 +13,4 @@ export const message = new schema.Entity(
   { idAttribute: 'mid' },
 );
 message.define({ replies: { data: [message] } });
+export const quickReply = new schema.Entity('quickReplies');

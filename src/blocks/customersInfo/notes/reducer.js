@@ -1,5 +1,5 @@
-import { CREATE_NOTE_TO_CUSTOMER, UPDATE_NOTE_OF_CUSTOMER, REMOVE_NOTE_OF_CUSTOMER } from './actions';
 import { initStoreState } from 'configs/initState';
+import { CREATE_NOTE_TO_CUSTOMER, REMOVE_NOTE_OF_CUSTOMER, UPDATE_NOTE_OF_CUSTOMER } from './actions';
 
 export default (state = initStoreState, action) => {
   switch (action.type) {

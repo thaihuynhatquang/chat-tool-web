@@ -1,14 +1,18 @@
-import React, { Fragment } from 'react';
 import classNames from 'classnames';
-import { pure } from 'recompose';
+import { CUSTOMER, DEFAULT_AVATAR_URL } from 'shared/constants';
+import React, { Fragment } from 'react';
+import { compose, lifecycle, mapProps, pure, withStateHandlers } from 'recompose';
 import Verified from 'shared/components/Verified';
-import Attachments from './Attachments';
+import { withExpiredAttachment } from 'shared/hooks';
 import { visualTime } from 'shared/utils';
+import { SEND_STATUS_ARRIVED, SEND_STATUS_COMPLETED, SEND_STATUS_PENDING } from '../constants';
 import { formatMessage } from '../utils';
-import { SEND_STATUS_PENDING, SEND_STATUS_ARRIVED, SEND_STATUS_COMPLETED } from '../constants';
+import ActionMessage from './ActionMessage';
+import Attachments from './Attachments';
 
 const Message = (props) => {
   const {
+    openMessage = false,
     isShowName = true,
     isShowAvatar = true,
     sendingStatus = null,
@@ -16,17 +20,23 @@ const Message = (props) => {
     mid,
     content,
     name,
+    onClickAvatar,
     avatarUrl,
     isVerified,
     isInverse = false,
     attachments,
+    onErrorAvatar,
     msgCreatedAt,
+    clearMiss,
+    processed,
+    isShowAction,
   } = props;
+
   const tooltipId = `message_${mid}`;
   return (
     <Fragment>
       <div
-        className={classNames('mb-1 mw-55', {
+        className={classNames('mb-1 mw-55 mw-sm-80', {
           'pr-5 float-right': isInverse,
           'pl-5': !isInverse,
         })}>
@@ -40,33 +50,45 @@ const Message = (props) => {
             {!!isVerified && <Verified />}
           </small>
         )}
-        <div className='position-relative'>
+        <div className='position-relative wrap-text'>
           {isShowAvatar && (
-            <img
-              className='rounded-circle position-absolute mt-1 object-fit-cover'
-              src={avatarUrl}
-              alt={name}
-              title={name}
-              width={25}
-              height={25}
-              style={{
-                [isInverse ? 'right' : 'left']: '-2rem',
-                bottom: '.25rem',
-              }}
-            />
+            <Fragment>
+              <img
+                className='rounded-circle position-absolute mt-1 object-fit-cover cursor-pointer'
+                src={avatarUrl}
+                alt=''
+                title={name}
+                width={25}
+                height={25}
+                onClick={onClickAvatar}
+                onError={(e) => onErrorAvatar(true)}
+                style={{
+                  [isInverse ? 'right' : 'left']: '-2rem',
+                  bottom: '.25rem',
+                }}
+              />
+            </Fragment>
           )}
           <span
             id={tooltipId}
             className={classNames(
-              'px-3 py-1 d-inline-block round-circle text-pre-wrap text-justify position-relative',
+              'px-3 py-1 d-inline-block round-circle text-pre-wrap text-justify position-relative mw-100',
               {
                 'bg-dark text-white float-right': isInverse,
                 'bg-light': !isInverse,
               },
             )}
             title={visualTime(msgCreatedAt)}>
-            {formatMessage(content || '')}
-            {attachments && <Attachments attachments={attachments} />}
+            <div
+              className={classNames({
+                'cursor-pointer': openMessage,
+              })}
+              onClick={() => {
+                openMessage && window.open(`https://facebook.com/${mid}`);
+              }}>
+              {formatMessage(content || '')}
+            </div>
+            {attachments && <Attachments id={mid} attachments={attachments} />}
             {sendingStatus && (
               <small
                 className='position-absolute'
@@ -84,6 +106,7 @@ const Message = (props) => {
               </small>
             )}
           </span>
+
           <div className='clearfix' />
         </div>
         {errorMessage && (
@@ -94,10 +117,54 @@ const Message = (props) => {
             <i className='fas fa-exclamation-circle' /> {errorMessage}
           </small>
         )}
+        {isShowAction && isShowAvatar && !isVerified && !errorMessage ? (
+          <div className='pl-1'>
+            <ActionMessage mid={mid} clearMiss={clearMiss} processed={processed} />
+          </div>
+        ) : (
+          ''
+        )}
       </div>
       <div className='clearfix' />
     </Fragment>
   );
 };
 
-export default pure(Message);
+const enhance = compose(
+  withExpiredAttachment('updateAvatar', ''),
+  withStateHandlers(
+    { errorAvatar: false },
+    {
+      onErrorAvatar: (state) => (error) => ({ errorAvatar: error }),
+      onClickAvatar: (state, props) => () => {
+        const { handleError, customerId } = props;
+
+        state.errorAvatar &&
+          customerId &&
+          handleError({
+            type: CUSTOMER,
+            id: customerId,
+          })();
+      },
+    },
+  ),
+  mapProps(({ avatarUrl, updateAvatar, ...rest }) => {
+    return {
+      ...rest,
+      avatarUrl: updateAvatar || avatarUrl || DEFAULT_AVATAR_URL,
+    };
+  }),
+  lifecycle({
+    componentDidUpdate(prevProps) {
+      const props = this.props;
+      if (props.avatarUrl !== prevProps.avatarUrl) {
+        props.updateAvatarCustomerAllMessages({
+          id: props.customerId,
+          avatarUrl: props.avatarUrl,
+        });
+      }
+    },
+  }),
+  pure,
+);
+export default enhance(Message);

@@ -1,5 +1,5 @@
-import { ADD_TAG_TO_CUSTOMER, REMOVE_TAG_FROM_CUSTOMER } from './actions';
 import { initStoreState } from 'configs/initState';
+import { ADD_TAG_TO_CUSTOMER, REMOVE_TAG_FROM_CUSTOMER } from './actions';
 
 export default (state = initStoreState, action) => {
   switch (action.type) {

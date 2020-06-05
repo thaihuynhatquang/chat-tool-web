@@ -1,6 +1,8 @@
-import { FETCH_THREADS_SUCCEED, FETCH_MORE_THREADS_SUCCEED, SELECT_THREAD } from './actions';
-import { unionArray, replaceVietnameseChar } from 'shared/utils';
 import { initStoreState } from 'configs/initState';
+import { PERMISSION_READ_ALL_THREADS, THREAD_STATUS_PROCESSING } from 'shared/constants';
+import * as storeGetter from 'shared/getEntities';
+import { canDo, replaceVietnameseChar, unionArray } from 'shared/utils';
+import { FETCH_MORE_THREADS_SUCCEED, FETCH_THREADS_SUCCEED, SELECT_THREAD } from './actions';
 
 export default (state = initStoreState, action) => {
   switch (action.type) {
@@ -34,7 +36,7 @@ export default (state = initStoreState, action) => {
             ...entities.threads,
           },
         },
-        totalCount: action.data.count,
+        totalThreadsCount: action.data.count,
       };
     }
     case SELECT_THREAD: {
@@ -58,12 +60,15 @@ export default (state = initStoreState, action) => {
 // Remove all current threads by filters. Requires update when filters logic changes.
 export const threadsPostReducer = (state = initStoreState) => {
   const {
+    userId,
     threads: items,
     entities: { threads: itemsById },
     filterThreadsBy: { title, status, isMiss, sort },
     selectedChannelId: channelId,
     selectedThreadId,
   } = state;
+  const me = storeGetter.getMe(state);
+  const channel = storeGetter.getChannelById(state, channelId);
   const filterItems = items
     .filter((id) => {
       const thread = itemsById[id];
@@ -71,19 +76,39 @@ export const threadsPostReducer = (state = initStoreState) => {
       if (thread.channelId !== channelId) return false;
       if (thread.status !== status) return false;
       if (
+        status === THREAD_STATUS_PROCESSING &&
+        channel &&
+        channel.configs &&
+        !channel.configs.isBroadcast &&
+        !canDo(me, channelId, PERMISSION_READ_ALL_THREADS) &&
+        thread.usersServing &&
+        Array.isArray(thread.usersServing) &&
+        !thread.usersServing.find((user) => user.id === userId)
+      ) {
+        return false;
+      }
+      if (
         title &&
         !replaceVietnameseChar(thread.title.toLowerCase()).includes(replaceVietnameseChar(title.toLowerCase()))
-      )
+      ) {
         return false;
+      }
+
       if (isMiss && thread.missCount === 0) return false;
       return true;
     })
     .sort((aKey, bKey) => {
       const aItem = itemsById[aKey];
       const bItem = itemsById[bKey];
-      const compareFunction =
-        !sort || sort === 'desc' ? aItem.updatedAt > bItem.updatedAt : aItem.updatedAt < bItem.updatedAt;
-      return compareFunction ? -1 : 1;
+      const compareFunction = () => {
+        if (!aItem.lastMsgAt) return 1;
+        if (!bItem.lastMsgAt) return -1;
+        if (aItem.lastMsgAt > bItem.lastMsgAt) return -1;
+        if (aItem.lastMsgAt < bItem.lastMsgAt) return 1;
+        return 0;
+      };
+      if (!sort || sort === 'desc') return compareFunction();
+      return -compareFunction();
     });
   const filterItemsById = filterItems.reduce(
     (acc, val) => ({ ...acc, [val]: itemsById[val] }),

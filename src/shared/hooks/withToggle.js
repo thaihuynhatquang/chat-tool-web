@@ -11,15 +11,19 @@ const withToggle = (toggleName, toggleByDefault = false) => {
       },
       {
         [`show${capitalizeName}`]: () => (e) => {
-          e.preventDefault();
-          return true;
+          e && e.preventDefault();
+          return {
+            [stateName]: true,
+          };
         },
         [`hide${capitalizeName}`]: () => (e) => {
-          e.preventDefault();
-          return false;
+          e && e.preventDefault();
+          return {
+            [stateName]: false,
+          };
         },
         [`toggle${capitalizeName}`]: (state) => (e) => {
-          e.preventDefault();
+          e && e.preventDefault();
           return {
             [stateName]: !state[stateName],
           };

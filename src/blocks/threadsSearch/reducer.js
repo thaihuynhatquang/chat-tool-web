@@ -1,5 +1,5 @@
-import { CHANGE_FILTER_BY } from './actions';
 import { initStoreState } from 'configs/initState';
+import { CHANGE_FILTER_BY } from './actions';
 
 export default (state = initStoreState, action) => {
   switch (action.type) {

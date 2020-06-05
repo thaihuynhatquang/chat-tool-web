@@ -65,8 +65,10 @@ export default PreviewImage((newprops) => {
     openLightbox,
     thumbnails,
     src,
+    alt,
     indexImage,
     className,
+    onError,
     ...rest
   } = newprops;
 
@@ -75,11 +77,13 @@ export default PreviewImage((newprops) => {
       <img
         className={`${className || ''} cursor-pointer`}
         src={src}
+        onError={onError}
         onClick={() => openLightbox(indexImage)}
+        alt={alt}
         {...rest}
-        alt={src}
       />
       <Lightbox
+        imageCountSeparator=' trên '
         currentImage={currentImage}
         images={thumbnails}
         isOpen={lightboxIsOpen}

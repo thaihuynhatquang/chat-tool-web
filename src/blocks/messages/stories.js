@@ -10,15 +10,43 @@ const MessageWrapper = (story) => <div style={{ width: '60%' }}>{story()}</div>;
 
 storiesOf('Message', module)
   .addDecorator(MessageWrapper)
-  .add('simple', () => <Message {...convertMessageToComponentProps(message)} isShowName isShowAvatar />)
-  .add('inverse', () => <Message {...convertMessageToComponentProps(message)} isInverse isShowName isShowAvatar />)
-  .add('long text', () => (
+  .add('simple', () => (
     <Message
       {...convertMessageToComponentProps(message)}
-      content='This is very very long text... Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text      Llalaa '
       isShowName
       isShowAvatar
+      clearMiss={() => async () => {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, 1000);
+        });
+      }}
     />
+  ))
+  .add('inverse', () => <Message {...convertMessageToComponentProps(message)} isInverse isShowName isShowAvatar />)
+  .add('long text', () => (
+    <div>
+      <Message
+        {...convertMessageToComponentProps(message)}
+        content='This is very very long text... Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text Hello world long text long text super long text      Llalaa '
+        isShowName
+        isShowAvatar
+      />
+      <Message
+        {...convertMessageToComponentProps(message)}
+        content='https://video.fhan2-2.fna.fbcdn.net/v/t42.9040-2/10000000_315615409053435_4162200884693958656_n.mp4?_nc_cat=111&efg=eyJ2ZW5jb2RlX3RhZyI6ImRhc2hfdjRfaHE1X2ZyYWdfMl92aWRlbyJ9&_nc_oc=AQmtOQhZJuOTNDYlML_X5MkXxwlkoWoWv1jP9-0YcbpQtKsZoJRJD1LgeaEh2vqX4ZE&_nc_ht=video.fhan2-2.fna&oh=45e7fb7edf78986af7c379f3402a6174&oe=5C50374D'
+        isShowName
+        isShowAvatar
+      />
+      <Message
+        {...convertMessageToComponentProps(message)}
+        content='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        isShowName
+        isShowAvatar
+        isInverse
+      />
+    </div>
   ))
   .add('with link', () => (
     <Message
@@ -45,6 +73,19 @@ storiesOf('Message', module)
       isShowAvatar
     />
   ))
+  .add('with template', () => {
+    const templates = attachments.filter((att) => att.type === 'template');
+    return (
+      <Message
+        {...convertMessageToComponentProps(message)}
+        content={null}
+        attachments={templates}
+        isShowName
+        isShowAvatar
+        isInverse
+      />
+    );
+  })
   .add('with error message', () => (
     <div>
       <Message
@@ -119,61 +160,61 @@ storiesOf('Messages', module)
     <div style={{ height: 300 }}>
       <Messages messages={messages} />
     </div>
-  ))
-  .add('2LV messages', () => (
-    <Messages
-      messageLevel={2}
-      replyMessage={() => {}}
-      loadMoreReplies={() => {}}
-      messages={[
-        {
-          ...message,
-          mid: 1,
-          replies: {
-            count: 15,
-            nextCursor: 'string',
-            data: [
-              { ...message, mid: 5 },
-              { ...message, mid: 4, isVerified: true },
-            ],
-          },
-        },
-        {
-          ...message,
-          mid: 2,
-          isVerified: true,
-          replies: {
-            count: 30,
-            nextCursor: 'string',
-            data: [
-              { ...message, mid: 5 },
-              {
-                ...message,
-                mid: 4,
-                isVerified: true,
-                sendingStatus: SEND_STATUS_ARRIVED,
-              },
-            ],
-          },
-        },
-        {
-          ...message,
-          mid: 3,
-          isVerified: true,
-          replies: {
-            count: 2,
-            nextCursor: 'string',
-            data: [
-              { ...message, mid: 5 },
-              {
-                ...message,
-                mid: 4,
-                isVerified: true,
-                sendingStatus: SEND_STATUS_PENDING,
-              },
-            ],
-          },
-        },
-      ]}
-    />
   ));
+// .add('2LV messages', () => (
+//   <Messages
+//     messageLevel={2}
+//     replyMessage={() => {}}
+//     loadMoreReplies={() => {}}
+//     messages={[
+//       {
+//         ...message,
+//         mid: 1,
+//         replies: {
+//           count: 15,
+//           nextCursor: 'string',
+//           data: [
+//             { ...message, mid: 5 },
+//             { ...message, mid: 4, isVerified: true }
+//           ]
+//         }
+//       },
+//       {
+//         ...message,
+//         mid: 2,
+//         isVerified: true,
+//         replies: {
+//           count: 30,
+//           nextCursor: 'string',
+//           data: [
+//             { ...message, mid: 5 },
+//             {
+//               ...message,
+//               mid: 4,
+//               isVerified: true,
+//               sendingStatus: SEND_STATUS_ARRIVED
+//             }
+//           ]
+//         }
+//       },
+//       {
+//         ...message,
+//         mid: 3,
+//         isVerified: true,
+//         replies: {
+//           count: 2,
+//           nextCursor: 'string',
+//           data: [
+//             { ...message, mid: 5 },
+//             {
+//               ...message,
+//               mid: 4,
+//               isVerified: true,
+//               sendingStatus: SEND_STATUS_PENDING
+//             }
+//           ]
+//         }
+//       }
+//     ]}
+//   />
+// ))

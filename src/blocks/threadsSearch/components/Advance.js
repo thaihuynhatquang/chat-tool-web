@@ -1,12 +1,7 @@
-import React from 'react';
 import classNames from 'classnames';
-import { Row, Col, Input, CustomInput } from 'reactstrap';
-import {
-  THREAD_STATUS_UNREAD,
-  THREAD_STATUS_PROCESSING,
-  THREAD_STATUS_SPAM,
-  THREAD_STATUS_DONE,
-} from 'common/constants';
+import { THREAD_STATUS_DONE, THREAD_STATUS_PROCESSING, THREAD_STATUS_SPAM, THREAD_STATUS_UNREAD } from 'shared/constants';
+import React from 'react';
+import { Col, CustomInput, Input, Row } from 'reactstrap';
 
 const labelSize = 3;
 const contentSize = 12 - labelSize;
@@ -26,6 +21,7 @@ const DEFAULT_LOCAL_FILTER = {
   status: THREAD_STATUS_PROCESSING,
   sort: ORDER_DESC,
   isMiss: false,
+  isMine: false,
 };
 
 const Advance = (props) => {
@@ -35,6 +31,7 @@ const Advance = (props) => {
     status = DEFAULT_LOCAL_FILTER.status,
     sort = DEFAULT_LOCAL_FILTER.sort,
     isMiss = DEFAULT_LOCAL_FILTER.isMiss,
+    isMine = DEFAULT_LOCAL_FILTER.isMine,
   } = localFilterBy;
   return (
     <div>
@@ -107,6 +104,22 @@ const Advance = (props) => {
             label='&nbsp;'
             defaultChecked={isMiss}
             onClick={(e) => onChangeFilter('isMiss', e.target.checked)}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={labelSize}>
+          <label htmlFor='checkIsMineBox'>
+            <small>Phòng của tôi</small>
+          </label>
+        </Col>
+        <Col xs={contentSize}>
+          <CustomInput
+            type='checkbox'
+            id='checkIsMineBox'
+            label='&nbsp;'
+            defaultChecked={isMine}
+            onClick={(e) => onChangeFilter('isMine', e.target.checked)}
           />
         </Col>
       </Row>

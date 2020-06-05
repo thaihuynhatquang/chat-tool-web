@@ -1,5 +1,4 @@
 import axios from 'axios';
-import vars from 'vars';
 
 const getCookieByName = (cname) => {
   const name = `${cname}=`;
@@ -19,8 +18,4 @@ const getCookieByName = (cname) => {
 
 const accessToken = getCookieByName('access_token');
 
-axios.defaults.baseURL = vars.REACT_APP_BASE_SERVER_URL;
-// axios.defaults.withCredentials = true;
-axios.defaults.headers.common.authorization = `Bearer ${accessToken}`;
-
-export const isSignedIn = accessToken ? true : false;
+axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;

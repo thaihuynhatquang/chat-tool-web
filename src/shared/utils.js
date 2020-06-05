@@ -1,5 +1,13 @@
 import moment from 'moment';
-
+export const generate_random_string = (string_length = 40) => {
+  let random_string = '';
+  let random_ascii;
+  for (let i = 0; i < string_length; i++) {
+    random_ascii = Math.floor(Math.random() * 25 + 97);
+    random_string += String.fromCharCode(random_ascii);
+  }
+  return random_string;
+};
 export const visualTime = (time) => {
   const isSameDay = moment().isSame(time, 'day');
   const isSameYear = moment().isSame(time, 'year');
@@ -10,6 +18,11 @@ export const visualTime = (time) => {
 export const upperFirst = (string) => {
   if (!string) return '';
   return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const numberWithCommas = (x) => {
+  if (!x && typeof x !== 'number') return x;
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 export const unionArray = (arrArg) =>
@@ -35,4 +48,15 @@ export const replaceVietnameseChar = (str) => {
   return str;
 };
 
-export const isDevelopment = process.env.NODE_ENV === 'development';
+export const canDo = (me, channelId, permission) => {
+  if (!me || !channelId) return false;
+  return me.roles
+    .filter((role) => role.channelId === channelId)
+    .reduce((acc, role) => {
+      const permissionKeys = role.permissions ? role.permissions.map((permission) => permission.key) : [];
+      return [...acc, ...permissionKeys];
+    }, [])
+    .includes(permission);
+};
+
+export const isDevelopment = process.env.NODE_ENV !== 'production';

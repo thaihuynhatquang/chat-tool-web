@@ -1,9 +1,7 @@
-import React from 'react';
 import { storiesOf } from '@storybook/react';
-
-import Customer from './components/Customer';
-
+import React from 'react';
 import { customer } from 'storybook/sampleData';
+import Customer from './components/Customer';
 
 const CustomersInfoWrapper = (story) => <div style={{ width: '30%' }}>{story()}</div>;
 

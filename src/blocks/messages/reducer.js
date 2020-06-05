@@ -1,9 +1,35 @@
-import { FETCH_MESSAGES_SUCCEED, FETCH_MORE_MESSAGES_SUCCEED, FETCH_MORE_REPLIES_SUCCEED } from './actions';
-import { unionArray } from 'shared/utils';
 import { initStoreState } from 'configs/initState';
+import { unionArray } from 'shared/utils';
+import {
+  FETCH_MESSAGES_SUCCEED,
+  FETCH_MORE_MESSAGES_SUCCEED,
+  FETCH_MORE_REPLIES_SUCCEED,
+  UPDATE_AVATAR_CUSTOMER_SUCCEED,
+} from './actions';
 
 export default (state = initStoreState, action) => {
   switch (action.type) {
+    case UPDATE_AVATAR_CUSTOMER_SUCCEED: {
+      const { id, avatarUrl } = action.updateCustomer;
+
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+
+          customers: {
+            ...state.entities.customers,
+            [id]: {
+              ...state.entities.customers[id],
+              additionData: {
+                ...state.entities.customers[id].additionData,
+                avatarUrl,
+              },
+            },
+          },
+        },
+      };
+    }
     case FETCH_MESSAGES_SUCCEED: {
       const { entities, result } = action.norm;
       return {

@@ -1,11 +1,13 @@
-import { compose, withProps, withHandlers, withState } from 'recompose';
-import { bindActionCreators } from 'redux';
+import { updateThreadStatus } from 'blocks/messagesHeader/services';
+import { THREAD_STATUS_DONE } from 'shared/constants';
 import { connect } from 'react-redux';
-import { withFetcher, withLoading, withInfiniteScroll, withEmpty } from 'shared/hooks';
-import Threads from './components/Threads';
-import { fetchThreadsSucceed, selectThread, fetchMoreThreadsSucceed, fetchMoreThreadsError } from './actions';
-import { fetchThreadsByChannelId } from './services';
+import { compose, withHandlers, withProps, withState } from 'recompose';
+import { bindActionCreators } from 'redux';
 import * as storeGetter from 'shared/getEntities';
+import { withEmpty, withFetcher, withInfiniteScroll, withLoading } from 'shared/hooks';
+import { fetchMoreThreadsError, fetchMoreThreadsSucceed, fetchThreadsSucceed, selectThread } from './actions';
+import Threads from './components/Threads';
+import { fetchThreadsByChannelId, setProcessedThread } from './services';
 
 const PAGING_LIMIT_THREADS = 20;
 
@@ -31,12 +33,6 @@ const mapDispatch = (dispatch) =>
     dispatch,
   );
 
-const withSelectThread = withHandlers({
-  onSelectThread: (props) => (id) => () => {
-    props.selectThread(id);
-  },
-});
-
 const withFetcherAPI = withFetcher(
   'threads',
   async (props) => {
@@ -44,6 +40,7 @@ const withFetcherAPI = withFetcher(
       selectedChannelId,
       filterBy: { sort, ...otherFilter },
     } = props;
+    if (!selectedChannelId) return;
     const input = {
       channelId: selectedChannelId,
       limit: props.limit,
@@ -58,6 +55,7 @@ const withFetcherAPI = withFetcher(
     return res;
   },
   {
+    fetchOnMount: true,
     fetchOnPropsChange: ['selectedChannelId', 'filterBy'],
   },
 );
@@ -83,7 +81,25 @@ const enhance = compose(
   withFetcherAPI,
   withLoadingAPI,
   withEmpty((props) => props.threads.length === 0),
-  withSelectThread,
+  withHandlers({
+    onSelectThread: (props) => (id) => () => {
+      props.selectThread(id);
+    },
+    onCloseThread: (props) => (threadId) => ({ cause }) => (e) => {
+      e.stopPropagation();
+      return updateThreadStatus({
+        threadId,
+        status: THREAD_STATUS_DONE,
+        cause,
+      });
+    },
+    onProcessThread: (props) => (threadId) => async (e) => {
+      e.stopPropagation();
+      setProcessedThread({
+        threadId,
+      });
+    },
+  }),
   // Scroll event
   withInfiniteScroll(
     CONTAINER_ID,

@@ -1,3 +1,4 @@
+import property from 'lodash/property';
 import { compose, withHandlers, withStateHandlers, mapProps, lifecycle } from 'recompose';
 import { upperFirst } from 'shared/utils';
 
@@ -56,7 +57,9 @@ const withFetcher = (name, fetchAPI, { fetchOnMount = false, fetchOnPropsChange 
           componentDidUpdate(prevProps) {
             const shouldFetch = fetchOnPropsChange.reduce((acc, key) => {
               if (typeof key !== 'string') return acc;
-              if (prevProps[key] !== this.props[key]) return true;
+              if (property(key)(prevProps) !== property(key)(this.props)) {
+                return true;
+              }
               return acc;
             }, false);
             if (shouldFetch) this.props[`fetch${Name}`]();

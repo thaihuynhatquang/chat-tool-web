@@ -1,14 +1,15 @@
-import Tags from './components/Tags';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { branch, mapProps, renderNothing, withHandlers, compose } from 'recompose';
-import * as actions from './actions';
-import * as services from './services';
+import { branch, compose, mapProps, renderNothing, withHandlers } from 'recompose';
+import { bindActionCreators } from 'redux';
 import * as storeGetter from 'shared/getEntities';
+import * as actions from './actions';
+import Tags from './components/Tags';
+import * as services from './services';
 
 const mapState = (state) => {
   const customer = storeGetter.getCustomer(state);
   return {
+    channelId: state.selectedChannelId,
     customerId: customer && customer.id,
     tags: customer && Array.isArray(customer.tags) ? customer.tags : [],
   };
@@ -26,10 +27,12 @@ const enhance = compose(
       services.addTagToCustomer({ customerId, tagId }).then(() => props.addTagToCustomer({ customerId, tag }));
     },
     searchTags: (props) => async (searchValue) => {
-      const { tags } = props;
+      const { tags, channelId } = props;
       const { data: tagsSearch } = await services.fetchTags({
+        channelId,
         content: searchValue,
       });
+
       return tagsSearch.filter((item) => !tags.find((tag) => tag.id === item.id));
     },
     removeTag: (props) => (tagId) => () => {

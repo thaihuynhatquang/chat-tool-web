@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import { compose, branch, mapProps, renderComponent, withStateHandlers } from 'recompose';
 import { Input } from 'reactstrap';
+import { branch, compose, mapProps, renderComponent, withStateHandlers } from 'recompose';
 import { visualTime } from 'shared/utils';
 
 const NormalMode = (props) => {

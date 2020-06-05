@@ -5,9 +5,7 @@ import { DEFAULT_IMAGES } from 'storybook/sampleData';
 
 const ThreadWrapper = (story) => <div style={{ width: '28%', height: 600 }}>{story()}</div>;
 
-function makeUnsplashSrc(id) {
-  return `https://images.unsplash.com/photo-${id}?dpr=2&auto=format&w=1024&h=1024`;
-}
+const makeUnsplashSrc = (id) => `https://images.unsplash.com/photo-${id}?dpr=2&auto=format&w=1024&h=1024`;
 
 storiesOf('PreviewImage', module)
   .addDecorator(ThreadWrapper)

@@ -5,11 +5,11 @@
  */
 
 .item-selected {
-  border-right: 4px solid #007bff!important;
+  border-right: 4px solid #007bff !important;
 }
 
 .item-not-selected {
-  border-right: 4px solid white!important;
+  border-right: 4px solid white !important;
 }
 
 .search-input {
@@ -26,7 +26,23 @@
   top: 0.45rem;
   left: 0.65rem;
   font-size: 1rem;
-  color: #6c757d!important;
+  color: #6c757d !important;
+}
+
+.search-input>i.fa-loading {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.65rem;
+  font-size: 1rem;
+}
+
+.tooltip-overlay {
+  font-size: 80%;
+  padding: 0 !important;
+}
+
+.tooltip-overlay .ant-tooltip-arrow {
+  display: none;
 }
 
 .textarea-sm {
@@ -39,6 +55,43 @@
 }
 
 .toastify-progress-custom {
-  height: 1px!important;
-  background: #6c757d!important;
+  height: 1px !important;
+  background: #6c757d !important;
+}
+
+/* Thread Hover */
+
+.thread .thread-action>div {
+  opacity: 0;
+}
+
+.thread:hover .thread-action>div {
+  opacity: 0.5;
+  -webkit-transition: 0.5s;
+  /* Safari */
+  transition: 0.5s;
+}
+
+.thread:hover .thread-action>div:hover {
+  opacity: 1;
+  -webkit-transition: 0.2s;
+  /* Safari */
+  transition: 0.2s;
+}
+
+.text-divider {
+  margin: 1rem 0;
+  line-height: 0;
+  text-align: center;
+}
+
+.text-divider span {
+  background-color: white;
+  padding-bottom: 1rem;
+}
+
+.text-divider:after {
+  content: " ";
+  display: block;
+  border-bottom: 1px solid #f7f7f7;
 }

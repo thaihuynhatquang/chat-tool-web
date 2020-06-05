@@ -1,0 +1,2 @@
+export const PREVIEW_ATTACHMENT_SIZE = 80;
+export const DEFAULT_SENDBOX_HEIGHT = 80;

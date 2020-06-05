@@ -1,10 +1,10 @@
-import Notes from './components/Notes';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { branch, mapProps, renderNothing, withHandlers, compose } from 'recompose';
-import * as actions from './actions';
-import * as services from './services';
+import { branch, compose, mapProps, renderNothing, withHandlers } from 'recompose';
+import { bindActionCreators } from 'redux';
 import * as storeGetter from 'shared/getEntities';
+import * as actions from './actions';
+import Notes from './components/Notes';
+import * as services from './services';
 
 const mapState = (state) => {
   const customer = storeGetter.getCustomer(state);

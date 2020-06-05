@@ -1,64 +1,54 @@
+import classNames from 'classnames';
+import { THREAD_STATUS_PROCESSING, THREAD_STATUS_UNREAD } from 'shared/constants';
 import React from 'react';
-import { Badge, UncontrolledDropdown, DropdownToggle } from 'reactstrap';
-import {
-  THREAD_STATUS_UNREAD,
-  THREAD_STATUS_PROCESSING,
-  THREAD_STATUS_SPAM,
-  THREAD_STATUS_DONE,
-} from 'common/constants';
+import { Badge, Col, DropdownToggle, Row, UncontrolledDropdown } from 'reactstrap';
 import { pure } from 'recompose';
 
-const statusNameMap = {
-  [THREAD_STATUS_UNREAD]: {
-    name: 'Chưa xử lý',
-    color: 'danger',
-    icon: 'far fa-envelope',
-  },
-  [THREAD_STATUS_PROCESSING]: {
-    name: 'Đang hoạt động',
-    color: 'primary',
-    icon: 'far fa-comments',
-  },
-  [THREAD_STATUS_SPAM]: {
-    name: 'Spam',
-    color: 'secondary',
-    icon: 'far fa-trash-alt',
-  },
-  [THREAD_STATUS_DONE]: {
-    name: 'Hoàn thành',
-    color: 'success',
-    icon: 'fas fa-check',
-  },
-};
+const Tab = (props) => {
+  const { title, count, isActive, onClick } = props;
 
-const Header = (props) => {
-  const {
-    filterBy: { status, title, isMiss, sort },
-    count,
-  } = props;
-  const selectStatus = statusNameMap[status];
-  const searchStatus = [selectStatus.name];
-  if (title) searchStatus.push(`Tên '${title}'`);
-  if (isMiss) searchStatus.push('Chưa trả lời');
-  if (sort && sort === 'asc') searchStatus.push('Cũ nhất');
-
+  const color = classNames({
+    primary: isActive,
+    white: !isActive,
+  });
   return (
-    <UncontrolledDropdown>
-      <DropdownToggle className='w-100' color='light'>
-        <span>
-          {searchStatus.map((item, index) => (
-            <Badge key={index} color='secondary' className='mr-1 font-weight-normal'>
-              {item}
-            </Badge>
-          ))}
+    <UncontrolledDropdown onClick={onClick}>
+      <DropdownToggle className='w-100 rounded-0 box-shadow-none' color={color}>
+        <span className='pr-2'>
+          <small>{title}</small>
         </span>
-        {count > 0 && (
-          <Badge color='danger' pill>
+        {typeof count === 'number' && (
+          <Badge color='light'>
             <small>{count}</small>
           </Badge>
         )}
       </DropdownToggle>
     </UncontrolledDropdown>
+  );
+};
+
+const Header = (props) => {
+  const { processingCount, unreadCount, currentFilterStatus, changeFilterStatus } = props;
+
+  return (
+    <Row noGutters className='pb-2'>
+      <Col col={6}>
+        <Tab
+          title='Đang hoạt động'
+          count={processingCount}
+          isActive={currentFilterStatus === THREAD_STATUS_PROCESSING}
+          onClick={changeFilterStatus(THREAD_STATUS_PROCESSING)}
+        />
+      </Col>
+      <Col col={6}>
+        <Tab
+          title='Chưa xử lý'
+          count={unreadCount}
+          isActive={currentFilterStatus === THREAD_STATUS_UNREAD}
+          onClick={changeFilterStatus(THREAD_STATUS_UNREAD)}
+        />
+      </Col>
+    </Row>
   );
 };
 

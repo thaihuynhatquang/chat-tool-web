@@ -1,8 +1,31 @@
-export const getUser = (state) => (state.userId ? state.entities.users[state.userId] : null);
+import { PERMISSION_READ_HIDDEN_MESSAGES } from 'shared/constants';
+import { canDo } from 'shared/utils';
+
+export const getMe = (state) => (state.userId ? state.entities.users[state.userId] : null);
 
 export const getChannels = (state) => state.channels.map((key) => state.entities.channels[key]);
 
-export const getThreads = (state) => state.threads.map((key) => state.entities.threads[key]);
+export const getSelectedChannel = (state) => {
+  const { selectedChannelId } = state;
+
+  return selectedChannelId ? state.entities.channels[selectedChannelId] : undefined;
+};
+
+export const getThreads = (state) => {
+  const threads = state.threads.map((key) => state.entities.threads[key]);
+  const me = getMe(state);
+  const canReadHiddenMessage = canDo(me, state.selectedChannelId, PERMISSION_READ_HIDDEN_MESSAGES);
+  if (canReadHiddenMessage) return threads;
+  return threads.map((thread) => ({
+    ...thread,
+    ...(thread.lastMessage && {
+      lastMessage: {
+        ...thread.lastMessage,
+        ...(thread.lastMessage.hidden ? { content: '' } : undefined),
+      },
+    }),
+  }));
+};
 
 export const getSelectedThread = (state) =>
   state.selectedThreadId ? state.entities.threads[state.selectedThreadId] : null;
@@ -47,4 +70,14 @@ export const getChannelMessageLevel = (channel) => {
   if (!channel) return 1;
   if (['fbcomment'].includes(channel.type)) return 2;
   return 1;
+};
+
+export const getFilterThreadsBy = (state) => state.filterThreadsBy;
+
+export const getQuickReplies = (state) => {
+  return Object.values(state.entities.quickReplies) || [];
+};
+
+export const getQuickRepliesFetched = (state) => {
+  return state.quickRepliesFetched;
 };

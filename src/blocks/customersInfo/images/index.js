@@ -1,10 +1,10 @@
 import React from 'react';
-import Images from './components/Images';
 import { connect } from 'react-redux';
-import { branch, mapProps, renderNothing, compose, withState } from 'recompose';
-import { withFetcher, withLoading, withInfiniteScroll, withEmpty } from 'shared/hooks';
-import * as services from './services';
+import { branch, compose, mapProps, renderNothing, withState } from 'recompose';
 import * as storeGetter from 'shared/getEntities';
+import { withEmpty, withFetcher, withInfiniteScroll, withLoading } from 'shared/hooks';
+import Images from './components/Images';
+import * as services from './services';
 
 const mapState = (state) => {
   const thread = storeGetter.getSelectedThread(state);

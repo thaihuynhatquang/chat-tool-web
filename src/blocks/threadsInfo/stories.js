@@ -1,9 +1,7 @@
-import React from 'react';
 import { storiesOf } from '@storybook/react';
-
-import ThreadInfo from './components/ThreadInfo';
-
+import React from 'react';
 import { thread, users } from 'storybook/sampleData';
+import ThreadInfo from './components/ThreadInfo';
 
 const ThreadWrapper = (story) => <div style={{ width: '28%', height: 600 }}>{story()}</div>;
 

@@ -1,9 +1,8 @@
-import React from 'react';
 import { storiesOf } from '@storybook/react';
-
+import React from 'react';
+import { DEFAULT_IMAGES } from 'storybook/sampleData';
 import Image from './components/Image';
 import Images from './components/Images';
-import { DEFAULT_IMAGES } from 'storybook/sampleData';
 
 const CustomersInfoWrapper = (story) => <div style={{ width: '30%', backgroundColor: '#eee' }}>{story()}</div>;
 

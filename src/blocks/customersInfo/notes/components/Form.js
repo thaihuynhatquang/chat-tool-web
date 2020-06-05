@@ -1,6 +1,6 @@
 import React from 'react';
-import { compose, branch, mapProps, renderNothing, withStateHandlers } from 'recompose';
 import { Input } from 'reactstrap';
+import { branch, compose, mapProps, renderNothing, withStateHandlers } from 'recompose';
 
 const styleButton = {
   width: '120px',

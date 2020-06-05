@@ -1,70 +1,51 @@
 import React from 'react';
-import Messages from './components/Messages';
-import { branch, lifecycle, mapProps, renderNothing, withHandlers, withProps, withState, compose } from 'recompose';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import { withFetcher, withScroll } from 'shared/hooks';
-import { SEND_STATUS_PENDING, SEND_STATUS_ARRIVED, SEND_STATUS_COMPLETED, FETCH_REPLIES_LIMIT } from './constants';
-import { withSendMessage } from 'blocks/messagesSendBox';
-import * as actions from './actions';
-import * as services from './services';
+import { branch, compose, lifecycle, mapProps, renderNothing, withHandlers, withProps, withState } from 'recompose';
+import { bindActionCreators } from 'redux';
 import * as storeGetter from 'shared/getEntities';
+import { withEmpty, withFetcher, withLoading, withScroll } from 'shared/hooks';
+import * as actions from './actions';
+import Messages from './components/Messages';
+import { FETCH_REPLIES_LIMIT, SEND_STATUS_COMPLETED } from './constants';
+import * as services from './services';
+import { getFormattedPendingMessages } from './utils';
+
+const getFormatStatus = (message, readAtValue) =>
+  message.isVerified ? (readAtValue && message.msgCreatedAt > readAtValue ? SEND_STATUS_COMPLETED : null) : null;
+
+const getReplies = (message, pendingMessages) =>
+  message.replies
+    ? {
+        ...message.replies,
+        data: [...pendingMessages, ...((message.replies && message.replies.data) || [])],
+      }
+    : pendingMessages.length > 0
+    ? {
+        count: 1,
+        data: pendingMessages,
+      }
+    : null;
 
 const mapState = (state) => {
   const { pendingMessages } = state;
-  const user = storeGetter.getUser(state);
+  const user = storeGetter.getMe(state);
   const thread = storeGetter.getSelectedThread(state);
   const channel = storeGetter.getChannelById(state, thread && thread.channelId);
   const messageLevel = storeGetter.getChannelMessageLevel(channel);
   const readAtValue = thread && thread.readAt;
 
-  const formattedPendingMessages = pendingMessages
-    .filter((item) => thread && item.threadId === thread.id)
-    .map((item) => {
-      const { identifier, threadId, parentId, message, attachment, messageId, errorMessage } = item;
-      const createdAt = moment(identifier, 'x');
-      return {
-        mid: identifier,
-        threadId,
-        parentId,
-        customer: null,
-        content: message,
-        additionData: attachment
-          ? {
-              attachments: [
-                {
-                  type: 'image',
-                  payload: {
-                    url: URL.createObjectURL(attachment),
-                  },
-                },
-              ],
-            }
-          : null,
-        sendingStatus: !messageId ? SEND_STATUS_PENDING : SEND_STATUS_ARRIVED,
-        isVerified: true,
-        user,
-        userId: user && user.id,
-        errorMessage,
-        msgCreatedAt: createdAt,
-        msgUpdatedAt: createdAt,
-      };
-    });
-  const messages = storeGetter.getMessages(state).map((item) => ({
-    ...item,
-    sendingStatus:
-      item.isVerified && readAtValue ? (item.msgCreatedAt > readAtValue ? SEND_STATUS_COMPLETED : null) : null,
-    replies: item.replies
-      ? {
-          ...item.replies,
-          data: [
-            ...formattedPendingMessages.filter((_item) => _item.parentId === item.mid).reverse(),
-            ...((item.replies && item.replies.data) || []),
-          ],
-        }
-      : null,
-  }));
+  if (!thread || !user) return {};
+  const formattedPendingMessages = getFormattedPendingMessages(pendingMessages, thread, user);
+  const messages = storeGetter.getMessages(state).map((item) => {
+    const filterPendingMessages = formattedPendingMessages.filter((_item) => _item.parentId === item.mid);
+    const filterPendingMessagesRev = [...filterPendingMessages].reverse();
+
+    return {
+      ...item,
+      sendingStatus: getFormatStatus(item, readAtValue),
+      replies: getReplies(item, filterPendingMessagesRev),
+    };
+  });
   // Create merge messages. NOTE: Array in latest-message-first order.
   const mergeMessages = [...[...formattedPendingMessages.filter((item) => !item.parentId)].reverse(), ...messages];
   const lastMessage = mergeMessages.length > 0 ? mergeMessages[0] : null;
@@ -82,6 +63,7 @@ const enhance = compose(
   connect(mapState, mapDispatch),
   branch((props) => !props.threadId, renderNothing),
   withState('nextCursor', 'setNextCursor', ''),
+  withState('threadLogs', 'setThreadLogs', []),
   withFetcher(
     'messages',
     async (props) => {
@@ -95,6 +77,22 @@ const enhance = compose(
       fetchOnPropsChange: ['threadId'],
     },
   ),
+  withFetcher(
+    'threadLogs',
+    async (props) => {
+      const { threadId, setThreadLogs } = props;
+      const { data: threadLogs } = await services.fetchThreadLogs({
+        threadId,
+      });
+      setThreadLogs(threadLogs);
+    },
+    {
+      fetchOnMount: true,
+      fetchOnPropsChange: ['threadId'],
+    },
+  ),
+  withLoading((props) => props.messagesFetcher.isLoading),
+  withEmpty((props) => props.messages.length === 0),
   withProps({ mountRef: React.createRef() }),
   withHandlers({
     scrollToBottom: (props) => () => {
@@ -116,11 +114,12 @@ const enhance = compose(
       });
       props.fetchMoreRepliesSucceed({ ...res, parentId: messageId });
     },
-  }),
-  withSendMessage,
-  withHandlers({
-    sendMessage: (props) => props._sendMessage(),
-    replyMessage: (props) => (parentId) => props._sendMessage(parentId),
+    updateAvatarCustomerAllMessages: (props) => (updatedCustomer) => {
+      props.updateAvatarCustomerSucceed(updatedCustomer);
+    },
+    clearMiss: (props) => (input) => async () => {
+      await services.clearMiss(input);
+    },
   }),
   lifecycle({
     componentDidMount() {
@@ -165,7 +164,8 @@ const enhance = compose(
       threadId,
       nextCursor,
       setNextCursor,
-      _sendMessage,
+      threadLogsFetcher,
+      setThreadLogs,
       ...rest
     }) => rest,
   ),

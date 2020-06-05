@@ -11,7 +11,7 @@ const CustomerInfo = (props) => {
   const {
     searchCustomers,
     selectCustomer,
-    customer: { name, additionData },
+    customer: { name, phone, additionData },
     totalCount,
   } = props;
   const avatarUrl = (additionData && additionData.avatarUrl) || '/images/default.png';
@@ -25,14 +25,11 @@ const CustomerInfo = (props) => {
       </div>
       {totalCount > 1 && <SearchBox searchCustomers={searchCustomers} selectCustomer={selectCustomer} />}
       <div className='d-flex align-items-center pt-2'>
-        <img
-          className='rounded-circle mw-100 mr-2 object-fit-cover'
-          width={40}
-          height={40}
-          src={avatarUrl}
-          alt={name}
-        />
-        <span>{name}</span>
+        <img className='rounded-circle mw-100 mr-2 object-fit-cover' width={40} height={40} src={avatarUrl} alt='' />
+        <div className='flex-column'>
+          <div>{name}</div>
+          {phone && <div className='text-secondary font-size-sm'>SĐT: {phone}</div>}
+        </div>
       </div>
     </Fragment>
   );

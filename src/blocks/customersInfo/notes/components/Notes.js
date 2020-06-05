@@ -1,6 +1,6 @@
-import React from 'react';
 import classNames from 'classnames';
-import { withStateHandlers, compose } from 'recompose';
+import React from 'react';
+import { compose, withStateHandlers } from 'recompose';
 import Form from './Form';
 import Note from './Note';
 

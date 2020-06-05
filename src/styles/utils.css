@@ -2,6 +2,15 @@
   color: white!important;
 }
 
+a.item-url {
+  color: #737373 !important;
+  background-color: transparent;
+}
+
+.box-shadow-none, .box-shadow-none:hover, .box-shadow-none:active, .box-shadow-none:focus {
+  box-shadow: none!important;
+}
+
 .cursor-disabled {
   cursor: not-allowed;
 }
@@ -26,6 +35,12 @@
   max-width: 55%;
 }
 
+@media screen and (max-width: 1200px) {
+  .mw-sm-80 {
+    max-width: 80%;
+  }
+}
+
 .object-fit-cover {
   object-fit: cover;
 }
@@ -48,4 +63,9 @@
 
 .text-primary-hover:hover {
   color: #007bff!important;
+}
+
+.wrap-text {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }

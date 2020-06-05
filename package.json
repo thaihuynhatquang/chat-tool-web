@@ -1,36 +1,43 @@
 {
-  "name": "chat-tool-v2-web",
+  "name": "chat-tool-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.4.2",
-    "axios": "^0.19.2",
+    "antd": "^3.13.0",
+    "axios": "^0.18.0",
     "bootstrap": "^4.1.3",
     "classnames": "^2.2.6",
     "emoji-mart": "^2.8.1",
-    "gapi": "0.0.3",
+    "env-cmd": "^8.0.2",
+    "lodash": "^4.17.11",
     "moment": "^2.22.2",
-    "normalizr": "^3.6.0",
+    "normalizr": "^3.3.0",
+    "pure-react-carousel": "^1.18.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
-    "react-google-login": "^5.1.19",
-    "react-redux": "^7.2.0",
+    "react-images": "^0.5.19",
+    "react-redux": "^5.1.1",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.5",
     "react-select": "^2.1.2",
     "react-toastify": "^4.5.1",
-    "react-images": "^0.5.19",
     "reactstrap": "^6.5.0",
     "recompose": "^0.30.0",
     "reduce-reducers": "^0.4.3",
-    "redux": "^4.0.5",
-    "socket.io-client": "^2.2.0"
+    "redux": "^4.0.1",
+    "socket.io-client": "^2.2.0",
+    "source-map-explorer": "^1.6.0"
   },
   "scripts": {
+    "analyze": "source-map-explorer build/static/js/main.*",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:develop": "env-cmd .env.develop npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint .",
+    "lint": "eslint src/",
+    "flow": "flow check",
     "storybook": "export NODE_PATH=src/ && start-storybook -p 9001 -c src/storybook -s public"
   },
   "eslintConfig": {
@@ -44,11 +51,14 @@
   ],
   "devDependencies": {
     "@storybook/addon-storyshots": "^4.1.2",
-    "@storybook/react": "5.3.18",
-    "@babel/core": "^7.4.5",
-    "@babel/node": "^7.4.5",
+    "@storybook/react": "4.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "babel-preset-flow": "^6.23.0",
     "prettier": "^1.14.3",
     "react-test-renderer": "^16.7.0",
     "require-context.macro": "^1.0.4"
-  }
+  },
+  "proxy": "http://localhost:3000"
 }

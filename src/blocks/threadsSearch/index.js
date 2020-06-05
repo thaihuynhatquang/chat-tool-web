@@ -1,19 +1,19 @@
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-  compose,
   branch,
+  compose,
   mapProps,
   renderComponent,
   renderNothing,
+  withHandlers,
   withState,
   withStateHandlers,
-  withHandlers,
 } from 'recompose';
+import { bindActionCreators } from 'redux';
 import { withToggle } from 'shared/hooks';
 import { changeFilterBy } from './actions';
-import ThreadSearchNormal from './components/Normal';
 import ThreadSearchAdvance from './components/Advance';
+import ThreadSearchNormal from './components/Normal';
 
 const enhanceNormalMode = compose(
   connect(
