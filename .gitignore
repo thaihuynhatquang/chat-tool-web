@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 
+public/config/env-local.js
 # testing
 /coverage
 

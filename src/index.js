@@ -1,24 +1,32 @@
 import React, { Fragment } from 'react';
-import ReactDOM from 'react-dom';
-import { Provider, connect } from 'react-redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import 'configs/axios';
-import configureStore from 'configs/store';
-import 'styles';
+import axios from 'axios';
 import App from 'blocks/app';
-import StockChecking from 'blocks/stockChecking';
-import ErrorBoundary from 'shared/components/ErrorBoundary';
-import { ToastContainer, toast } from 'react-toastify';
-import * as serviceWorker from 'serviceWorker';
+import withConfigChannelLayout from 'blocks/configChannel';
 import GeneralSettings from 'blocks/configChannel/generalSettings';
 import UserRole from 'blocks/configChannel/userRole';
-import withConfigChannelLayout from 'blocks/configChannel';
-import { withFetcher } from 'shared/hooks';
+import StockChecking from 'blocks/stockChecking';
+import 'configs/axios';
+import { isSignedIn } from 'configs/axios';
+import configureStore from 'configs/store';
+import ReactDOM from 'react-dom';
+import { GoogleLogin } from 'react-google-login';
+import { connect, Provider } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import { compose } from 'recompose';
-import axios from 'axios';
 import { bindActionCreators } from 'redux';
-import { fetchCurrentUserSucceed } from './blocks/app/actions';
+import * as serviceWorker from 'serviceWorker';
+import ErrorBoundary from 'shared/components/ErrorBoundary';
 import { CHANNEL_CONFIG_GENERAL_SETTINGS, CHANNEL_CONFIG_ROLES_AND_PERMISSIONS } from 'shared/constants';
+import { withFetcher } from 'shared/hooks';
+import 'styles';
+import vars from 'vars';
+import { fetchCurrentUserSucceed } from './blocks/app/actions';
+
+const responseGoogle = (response) => {
+  const accessToken = response.tokenId;
+  document.cookie = `access_token=${accessToken}`;
+};
 
 const rootElement = document.getElementById('root');
 
@@ -35,10 +43,7 @@ const enhance = compose(
         props.fetchCurrentUserSucceed(userInfo);
       } catch (err) {
         if (err.response && err.response.status === 401) {
-          const iamUrl = process.env.REACT_APP_IAM_SERVER_URL;
-          if (iamUrl) {
-            window.location = `${iamUrl}/web/login?redirect_url=${window.location.href}`;
-          }
+          console.log(err);
         }
       }
     },
@@ -65,14 +70,29 @@ const AppWrapper = enhance((props) => (
 
 rootElement &&
   ReactDOM.render(
-    <Provider store={configureStore()}>
-      <Fragment>
-        <ErrorBoundary onError={(error, info) => toast.error(<small>Có gì đó sai sai: {error.message}</small>)}>
-          <AppWrapper />
-        </ErrorBoundary>
-        <ToastContainer autoClose={7000} newestOnTop closeButton={false} progressClassName='toastify-progress-custom' />
-      </Fragment>
-    </Provider>,
+    isSignedIn ? (
+      <Provider store={configureStore()}>
+        <Fragment>
+          <ErrorBoundary onError={(error, info) => toast.error(<small>Có gì đó sai sai: {error.message}</small>)}>
+            <AppWrapper />
+          </ErrorBoundary>
+          <ToastContainer
+            autoClose={7000}
+            newestOnTop
+            closeButton={false}
+            progressClassName='toastify-progress-custom'
+          />
+        </Fragment>
+      </Provider>
+    ) : (
+      <GoogleLogin
+        clientId={vars.CLIENT_ID}
+        buttonText='Login'
+        onSuccess={responseGoogle}
+        onFailure={(e) => console.log(e)}
+        cookiePolicy={'single_host_origin'}
+      />
+    ),
     rootElement,
   );
 

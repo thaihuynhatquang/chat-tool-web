@@ -19,3 +19,5 @@ const getCookieByName = (cname) => {
 const accessToken = getCookieByName('access_token');
 
 axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+export const isSignedIn = accessToken ? true : false;
