@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { client } from 'configs/axios';
 import { thread } from 'configs/normalizr';
 import { normalize } from 'normalizr';
 
@@ -14,4 +15,4 @@ export const fetchThreadsByChannelId = (input) => {
     }));
 };
 
-export const setProcessedThread = ({ threadId }) => axios.put(`/api/v1/threads/${threadId}/clear-miss`);
+export const setProcessedThread = ({ threadId }) => client.put(`/api/v1/threads/${threadId}/clear-miss`);

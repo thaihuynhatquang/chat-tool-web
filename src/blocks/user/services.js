@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { normalize } from 'normalizr';
+import { client } from 'configs/axios';
 import { user } from 'configs/normalizr';
+import { normalize } from 'normalizr';
 
 export const updateUserInfo = (updateInfo) =>
-  axios.put('/api/v1/users/me', { ...updateInfo }).then((res) => ({
+  client.put('/api/v1/users/me', { ...updateInfo }).then((res) => ({
     data: res.data,
     norm: normalize(res.data, user),
   }));

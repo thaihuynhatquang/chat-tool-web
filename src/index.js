@@ -4,9 +4,8 @@ import App from 'blocks/app';
 import withConfigChannelLayout from 'blocks/configChannel';
 import GeneralSettings from 'blocks/configChannel/generalSettings';
 import UserRole from 'blocks/configChannel/userRole';
-import StockChecking from 'blocks/stockChecking';
 import 'configs/axios';
-import { isSignedIn } from 'configs/axios';
+import { accessToken } from 'configs/axios';
 import configureStore from 'configs/store';
 import ReactDOM from 'react-dom';
 import { GoogleLogin } from 'react-google-login';
@@ -26,6 +25,7 @@ import { fetchCurrentUserSucceed } from './blocks/app/actions';
 const responseGoogle = (response) => {
   const accessToken = response.tokenId;
   document.cookie = `access_token=${accessToken}`;
+  window.location.reload();
 };
 
 const rootElement = document.getElementById('root');
@@ -55,7 +55,6 @@ const AppWrapper = enhance((props) => (
   <Router>
     <Fragment>
       <Route path='/' exact component={App} />
-      <Route path='/stocks' exact component={StockChecking} />
       <Route
         path={`/channel/:channelId/${CHANNEL_CONFIG_GENERAL_SETTINGS}`}
         render={withConfigChannelLayout(GeneralSettings)}
@@ -70,7 +69,7 @@ const AppWrapper = enhance((props) => (
 
 rootElement &&
   ReactDOM.render(
-    isSignedIn ? (
+    !!accessToken ? (
       <Provider store={configureStore()}>
         <Fragment>
           <ErrorBoundary onError={(error, info) => toast.error(<small>Có gì đó sai sai: {error.message}</small>)}>

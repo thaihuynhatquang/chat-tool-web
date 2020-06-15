@@ -32,13 +32,6 @@ const NavLink = (props) => {
           className='cursor-pointer'>
           <span className='float-right'>Phân quyền người dùng</span>
         </ListGroupItem>
-        <ListGroupItem
-          action
-          disabled
-          onClick={changeRoute(`/channel/${channelId}/${CHANNEL_CONFIG_REPORTS}`)}
-          className='cursor-disabled'>
-          <span className='float-right'>Báo cáo, thống kê</span>
-        </ListGroupItem>
       </ListGroup>
     </Fragment>
   );

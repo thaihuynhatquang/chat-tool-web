@@ -8,6 +8,7 @@ import { withFetcher, withLoading } from 'shared/hooks';
 import * as actions from './actions';
 import Channels from './components/Channels';
 import * as services from './services';
+import { client } from 'configs/axios';
 
 const mapState = (state) => {
   const { selectedChannelId } = state;
@@ -21,6 +22,20 @@ const mapDispatch = (dispatch) => bindActionCreators(actions, dispatch);
 
 const enhance = compose(
   connect(mapState, mapDispatch),
+  withFetcher(
+    'user',
+    async (props) => {
+      try {
+        const { data: userInfo } = await client.get('/api/v1/users/me');
+        props.fetchCurrentUserSucceed(userInfo);
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          console.log(err);
+        }
+      }
+    },
+    { fetchOnMount: true },
+  ),
   withFetcher(
     'channels',
     async (props) => {
@@ -47,7 +62,7 @@ const enhance = compose(
       });
     },
   }),
-  mapProps(({ channelsFetcher, fetchChannelsSucceed, selectChannel, ...rest }) => rest),
+  mapProps(({ channelsFetcher, fetchChannelsSucceed, fetchCurrentUserSucceed, selectChannel, ...rest }) => rest),
 );
 
 export default enhance(Channels);

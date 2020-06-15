@@ -19,9 +19,8 @@ const enhance = compose(
       return res;
     },
     logout: (props) => () => {
-      window.location.href = `${process.env.REACT_APP_IAM_SERVER_URL || ''}/web/logout?redirect_url=${
-        window.location.href
-      }`;
+      document.cookie = `access_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+      window.location.href = `${process.env.REACT_APP_IAM_SERVER_URL || ''}`;
     },
   }),
 );

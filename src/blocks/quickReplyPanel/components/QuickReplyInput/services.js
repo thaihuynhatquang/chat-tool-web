@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { client } from 'configs/axios';
 
 export const fetchQuickReplies = ({ content }) =>
-  axios.post('/api/v1/quickReplies', { content }).then((res) => res.data);
+  client.post('/api/v1/quickReplies', { content }).then((res) => res.data);

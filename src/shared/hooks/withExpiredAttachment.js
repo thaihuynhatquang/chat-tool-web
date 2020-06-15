@@ -1,8 +1,8 @@
+import { client } from 'configs/axios';
 import { compose, withHandlers, withState } from 'recompose';
-import axios from 'axios';
 import { upperFirst } from 'shared/utils';
 
-const refreshAttachment = ({ type, id }) => axios.get(`/api/v1/${type}s/${id}/recover`).then((res) => res.data);
+const refreshAttachment = ({ type, id }) => client.get(`/api/v1/${type}s/${id}/recover`).then((res) => res.data);
 
 const withExpired = (nameState, initState) =>
   compose(

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { client } from 'configs/axios';
 
 export const fetchStatusThreadsCount = ({ channelId }) =>
-  axios.get(`/api/v1/channels/${channelId}/status-thread-count`).then((res) => res.data);
+  client.get(`/api/v1/channels/${channelId}/status-thread-count`).then((res) => res.data);

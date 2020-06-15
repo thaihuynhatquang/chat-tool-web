@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { client } from 'configs/axios';
 
 export const sendMessage = ({ threadId, message, parentId, attachment }) => {
   const bodyForm = new FormData();
@@ -6,5 +6,5 @@ export const sendMessage = ({ threadId, message, parentId, attachment }) => {
   parentId && bodyForm.set('parentId', parentId);
   bodyForm.set('message', message);
   attachment && bodyForm.set('attachment', attachment);
-  return axios.post(`/api/v1/threads/${threadId}/messages`, bodyForm).then((res) => res.data);
+  return client.post(`/api/v1/threads/${threadId}/messages`, bodyForm).then((res) => res.data);
 };
