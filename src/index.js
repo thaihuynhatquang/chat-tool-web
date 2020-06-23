@@ -1,14 +1,13 @@
-import React, { Fragment } from 'react';
-import axios from 'axios';
 import App from 'blocks/app';
 import withConfigChannelLayout from 'blocks/configChannel';
 import GeneralSettings from 'blocks/configChannel/generalSettings';
 import UserRole from 'blocks/configChannel/userRole';
+import { LoginScreen } from 'blocks/loginScreen';
 import 'configs/axios';
-import { accessToken } from 'configs/axios';
+import { accessToken, client } from 'configs/axios';
 import configureStore from 'configs/store';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
-import { GoogleLogin } from 'react-google-login';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -19,14 +18,7 @@ import ErrorBoundary from 'shared/components/ErrorBoundary';
 import { CHANNEL_CONFIG_GENERAL_SETTINGS, CHANNEL_CONFIG_ROLES_AND_PERMISSIONS } from 'shared/constants';
 import { withFetcher } from 'shared/hooks';
 import 'styles';
-import vars from 'vars';
 import { fetchCurrentUserSucceed } from './blocks/app/actions';
-
-const responseGoogle = (response) => {
-  const accessToken = response.tokenId;
-  document.cookie = `access_token=${accessToken}`;
-  window.location.reload();
-};
 
 const rootElement = document.getElementById('root');
 
@@ -39,7 +31,7 @@ const enhance = compose(
     'user',
     async (props) => {
       try {
-        const { data: userInfo } = await axios.get('/api/v1/users/me');
+        const { data: userInfo } = await client.get('/api/v1/users/me');
         props.fetchCurrentUserSucceed(userInfo);
       } catch (err) {
         if (err.response && err.response.status === 401) {
@@ -84,13 +76,7 @@ rootElement &&
         </Fragment>
       </Provider>
     ) : (
-      <GoogleLogin
-        clientId={vars.CLIENT_ID}
-        buttonText='Login'
-        onSuccess={responseGoogle}
-        onFailure={(e) => console.log(e)}
-        cookiePolicy={'single_host_origin'}
-      />
+      <LoginScreen />
     ),
     rootElement,
   );

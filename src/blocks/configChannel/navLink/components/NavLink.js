@@ -1,10 +1,6 @@
-import {
-  CHANNEL_CONFIG_GENERAL_SETTINGS,
-  CHANNEL_CONFIG_REPORTS,
-  CHANNEL_CONFIG_ROLES_AND_PERMISSIONS,
-} from 'shared/constants';
 import React, { Fragment } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
+import { CHANNEL_CONFIG_GENERAL_SETTINGS, CHANNEL_CONFIG_ROLES_AND_PERMISSIONS } from 'shared/constants';
 
 const NavLink = (props) => {
   const { changeRoute, channelId, name } = props;
