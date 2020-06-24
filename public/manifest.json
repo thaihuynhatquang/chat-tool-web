@@ -3,7 +3,7 @@
   "name": "Hệ thống Quản lý giao tiếp khách hàng",
   "icons": [
     {
-      "src": "./images/default.png",
+      "src": "./images/logo.png",
       "type": "image/png",
       "sizes": "192x192"
     }
