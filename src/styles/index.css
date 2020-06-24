@@ -95,3 +95,7 @@
   display: block;
   border-bottom: 1px solid #f7f7f7;
 }
+
+.background-app {
+  background: #EFEEEB !important;
+}
