@@ -1,11 +1,10 @@
-import axios from 'axios';
 import { client } from 'configs/axios';
 import { thread } from 'configs/normalizr';
 import { normalize } from 'normalizr';
 
 export const fetchThreadsByChannelId = (input) => {
   const { channelId, ...filterInput } = input;
-  return axios
+  return client
     .get(`/api/v1/channels/${channelId}/threads`, {
       params: filterInput,
     })

@@ -1,7 +1,7 @@
-import axios from 'axios';
+import { client } from 'configs/axios';
 
 export const fetchImages = ({ threadId, nextCursor, limit }) =>
-  axios
+  client
     .get(`/api/v1/threads/${threadId}/attachments`, {
       params: { nextCursor, limit },
     })
