@@ -58,5 +58,5 @@
     "react-test-renderer": "^16.7.0",
     "require-context.macro": "^1.0.4"
   },
-  "proxy": "https://api/chatible.me"
+  "proxy": "https://api.chatible.me"
 }
